@@ -1,5 +1,3 @@
-import React from "react";
-
 const MaintainanceMainTab = () => {
    return (
       <div>

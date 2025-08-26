@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { type FC } from "react";
+import { type FC } from "react";
 import type { MUIIconType } from ".";
 import { Link, useNavigate, useSearchParams, type To } from "react-router-dom";
 import { cn } from "../../lib/utils";
