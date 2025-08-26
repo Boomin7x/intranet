@@ -84,15 +84,15 @@ export const navItems: INavItems[] = [
          },
       ],
    },
-   {
-      icons: AttachMoneyIcon,
-      title: "Finance Management",
-      link: "#",
-      navChildren: [
-         {
-            icons: DashboardCustomizeOutlinedIcon,
-            title: "New Dashboard",
-         },
-      ],
-   },
+   //    {
+   //       icons: AttachMoneyIcon,
+   //       title: "Finance Management",
+   //       link: "#",
+   //       navChildren: [
+   //          {
+   //             icons: DashboardCustomizeOutlinedIcon,
+   //             title: "New Dashboard",
+   //          },
+   //       ],
+   //    },
 ];
