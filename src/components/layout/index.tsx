@@ -1,14 +1,24 @@
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./sidebar";
+import { useMediaQuery } from "react-responsive";
+import { cn } from "../../lib/utils";
 
 export type MUIIconType = typeof DashboardOutlinedIcon;
 
 const MainDashboardLayout = () => {
+   const isSmallLaptops = useMediaQuery({ maxWidth: 1200, minWidth: 900 });
    return (
-      <div className="w-screen h-screen overflow-hidden grid grid-cols-6">
-         <Sidebar />
-         <div className="col-span-5 flex flex-col size-full  ">
+      <div className="w-screen h-screen overflow-hidden flex ">
+         <div
+            className={cn(
+               "w-1/6  flex flex-col max-w-7xl transition-all duration-300 ease-in-out",
+               isSmallLaptops && "w-fit",
+            )}
+         >
+            <Sidebar />
+         </div>
+         <div className=" flex flex-col flex-1  ">
             <Outlet />
          </div>
       </div>

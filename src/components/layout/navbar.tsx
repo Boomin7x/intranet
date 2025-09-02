@@ -55,9 +55,9 @@ const DashboardNavbar: FC<IDashboardNavbar> = ({ title = "Dashboard" }) => {
    ];
    return (
       <>
-         <div className="flex items-center sticky top-0 justify-between px-6 py-4 border-b border-gray-200 bg-white">
-            <h2 className="text-3xl font-bold">{title}</h2>
-            <div className="flex items-center gap-4">
+         <div className="flex items-center sticky top-0 justify-between px-6 py-3 border-b border-gray-200 bg-white">
+            <h2 className="text-2xl font-bold">{title}</h2>
+            <div className="flex items-center gap-2">
                {navElements.map((items, i) => {
                   const Icons = items?.icon;
 
@@ -66,11 +66,11 @@ const DashboardNavbar: FC<IDashboardNavbar> = ({ title = "Dashboard" }) => {
                         <ButtonWithDropdown
                            tooltipTitle={items?.title}
                            trigger={
-                              <button className="size-12 group  flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-full relative  cursor-pointer transition-all duration-300 ease-in-out">
+                              <button className="size-10 group  flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-full relative  cursor-pointer transition-all duration-300 ease-in-out">
                                  {items?.isActive ? (
-                                    <div className="absolute top-0 right-0 size-3 rounded-full bg-red-600" />
+                                    <div className="absolute top-0 right-0 size-2 rounded-full bg-red-600" />
                                  ) : null}
-                                 <Icons className="text-gray-500 group-hover:text-gray-700 " />
+                                 <Icons className="text-gray-500 group-hover:text-gray-700 !text-xl " />
                               </button>
                            }
                            key={"navElements" + i}
@@ -91,11 +91,11 @@ const DashboardNavbar: FC<IDashboardNavbar> = ({ title = "Dashboard" }) => {
                   }
                   return (
                      <Tooltip key={"navElements" + i} title={items?.title} arrow>
-                        <button className="size-12 group  flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-full relative  cursor-pointer transition-all duration-300 ease-in-out">
+                        <button className="size-10 group  flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-full relative  cursor-pointer transition-all duration-300 ease-in-out">
                            {items?.isActive ? (
                               <div className="absolute top-0 right-0 size-3 rounded-full bg-red-600" />
                            ) : null}
-                           <Icons className="text-gray-500 group-hover:text-gray-700 " />
+                           <Icons className="text-gray-500 group-hover:text-gray-700 !text-xl " />
                         </button>
                      </Tooltip>
                   );
@@ -103,12 +103,16 @@ const DashboardNavbar: FC<IDashboardNavbar> = ({ title = "Dashboard" }) => {
                <button
                   onClick={toggleProfile}
                   aria-describedby={"profile"}
-                  className="flex items-center gap-3 bg-gray-100 p-2 rounded-full pr-5 hover:bg-gray-200 transition-all duration-300 ease-in-out cursor-pointer"
+                  className="flex items-center gap-1 bg-gray-100 p-2 rounded-full pr-5 hover:bg-gray-200 transition-all duration-300 ease-in-out cursor-pointer"
                >
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                  <Avatar
+                     alt="Remy Sharp"
+                     src="/static/images/avatar/1.jpg"
+                     sx={{ width: 30, height: 30 }}
+                  />
                   <div className="text-start">
-                     <p className="text-lg font-semibold">Muhammad jamiu</p>
-                     <p className="text-sm text-gray-500">Employee</p>
+                     <p className="text-sm font-semibold leading-1">Muhammad jamiu</p>
+                     <p className="text-xs text-gray-500  mt-3 leading-1">Employee</p>
                   </div>
                </button>
             </div>
@@ -197,17 +201,7 @@ const DashboardNavbar: FC<IDashboardNavbar> = ({ title = "Dashboard" }) => {
                               <Person sx={{ color: "rgb(59, 130, 246)", fontSize: 20 }} />
                            </Box>
                         </ListItemIcon>
-                        <ListItemText
-                           primary="My Profile"
-                           secondary="Manage your account"
-                           primaryTypographyProps={{
-                              className: "font-medium text-gray-800",
-                              variant: "body2",
-                           }}
-                           secondaryTypographyProps={{
-                              className: "text-gray-500 text-xs",
-                           }}
-                        />
+                        <ListItemText primary="My Profile" secondary="Manage your account" />
                         <ChevronRight sx={{ color: "rgb(156, 163, 175)", fontSize: 18 }} />
                      </MenuItem>
 
@@ -220,17 +214,7 @@ const DashboardNavbar: FC<IDashboardNavbar> = ({ title = "Dashboard" }) => {
                               <Settings sx={{ color: "rgb(147, 51, 234)", fontSize: 20 }} />
                            </Box>
                         </ListItemIcon>
-                        <ListItemText
-                           primary="Settings"
-                           secondary="Preferences & privacy"
-                           primaryTypographyProps={{
-                              className: "font-medium text-gray-800",
-                              variant: "body2",
-                           }}
-                           secondaryTypographyProps={{
-                              className: "text-gray-500 text-xs",
-                           }}
-                        />
+                        <ListItemText primary="Settings" secondary="Preferences & privacy" />
                         <ChevronRight sx={{ color: "rgb(156, 163, 175)", fontSize: 18 }} />
                      </MenuItem>
 
@@ -243,17 +227,7 @@ const DashboardNavbar: FC<IDashboardNavbar> = ({ title = "Dashboard" }) => {
                               <Notifications sx={{ color: "rgb(34, 197, 94)", fontSize: 20 }} />
                            </Box>
                         </ListItemIcon>
-                        <ListItemText
-                           primary="Notifications"
-                           secondary="Manage alerts"
-                           primaryTypographyProps={{
-                              className: "font-medium text-gray-800",
-                              variant: "body2",
-                           }}
-                           secondaryTypographyProps={{
-                              className: "text-gray-500 text-xs",
-                           }}
-                        />
+                        <ListItemText primary="Notifications" secondary="Manage alerts" />
                         <Chip
                            label="3"
                            size="small"
@@ -276,17 +250,7 @@ const DashboardNavbar: FC<IDashboardNavbar> = ({ title = "Dashboard" }) => {
                               <DarkMode sx={{ color: "rgb(99, 102, 241)", fontSize: 20 }} />
                            </Box>
                         </ListItemIcon>
-                        <ListItemText
-                           primary="Dark Mode"
-                           secondary="Toggle theme"
-                           primaryTypographyProps={{
-                              className: "font-medium text-gray-800",
-                              variant: "body2",
-                           }}
-                           secondaryTypographyProps={{
-                              className: "text-gray-500 text-xs",
-                           }}
-                        />
+                        <ListItemText primary="Dark Mode" secondary="Toggle theme" />
                         <ChevronRight sx={{ color: "rgb(156, 163, 175)", fontSize: 18 }} />
                      </MenuItem>
 
@@ -299,17 +263,7 @@ const DashboardNavbar: FC<IDashboardNavbar> = ({ title = "Dashboard" }) => {
                               <Help sx={{ color: "rgb(249, 115, 22)", fontSize: 20 }} />
                            </Box>
                         </ListItemIcon>
-                        <ListItemText
-                           primary="Help & Support"
-                           secondary="Get assistance"
-                           primaryTypographyProps={{
-                              className: "font-medium text-gray-800",
-                              variant: "body2",
-                           }}
-                           secondaryTypographyProps={{
-                              className: "text-gray-500 text-xs",
-                           }}
-                        />
+                        <ListItemText primary="Help & Support" secondary="Get assistance" />
                         <ChevronRight sx={{ color: "rgb(156, 163, 175)", fontSize: 18 }} />
                      </MenuItem>
 

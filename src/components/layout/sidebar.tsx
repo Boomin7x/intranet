@@ -6,6 +6,7 @@ import { cn } from "../../lib/utils";
 import { Box, IconButton } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { navItems } from "./utils";
+import { useMediaQuery } from "react-responsive";
 
 // Professional color scheme
 export const professionalTheme = {
@@ -56,21 +57,30 @@ const Sidebar = () => {
 };
 
 export const DashboardLogo = () => {
+   const isSmallLaptops = useMediaQuery({ maxWidth: 1200, minWidth: 900 });
    return (
-      <Box className="flex items-center space-x-3 p-6 border-b border-slate-700">
+      <Box
+         className={cn(
+            "flex items-center space-x-1 p-3 border-b border-slate-700",
+            isSmallLaptops && "justify-center",
+         )}
+      >
          {/* Logo Mark */}
          <div
-            className="flex items-center justify-center w-12 h-12 rounded-2xl shadow-lg"
+            className="flex items-center justify-center w-8 h-8 rounded-xl shadow-lg shrink-0"
             style={{
                background: `linear-gradient(135deg, ${professionalTheme.logoGradientFrom} 0%, ${professionalTheme.logoGradientTo} 100%)`,
             }}
          >
-            <span className="text-white text-2xl font-extrabold">O</span>
+            <span className="text-white text-xl font-extrabold">O</span>
          </div>
 
          {/* Logo Text */}
          <h1
-            className="text-3xl md:text-4xl font-bold tracking-tight"
+            className={cn(
+               "text-xl md:text-2xl font-bold tracking-tight overflow-hidden max-w-7xl transition-all duration-300 ease-in-out",
+               isSmallLaptops && "max-w-0",
+            )}
             style={{ color: professionalTheme.primaryText }}
          >
             Intranet
@@ -101,6 +111,7 @@ const NavItems: FC<INavItems> = ({
    const navigate = useNavigate();
    const [searchParams] = useSearchParams();
    const navOpened = searchParams.get("navopened");
+   const isSmallLaptops = useMediaQuery({ maxWidth: 1200, minWidth: 900 });
 
    const handletoggleView = (title: string) => {
       if (navOpened === title) {
@@ -145,15 +156,20 @@ const NavItems: FC<INavItems> = ({
                         },
                      }}
                      key={"navChildren" + i}
-                     className="py-3 pl-12 pr-6 transition-all duration-200 ease-in-out"
+                     className="py-3 pl-5  transition-all duration-200 ease-in-out"
                   >
                      <Link
                         to={link}
                         className="flex items-center gap-3 group"
                         style={{ color: professionalTheme.secondaryText }}
                      >
-                        <Icon className="text-lg group-hover:text-white transition-colors duration-200" />
-                        <p className="capitalize font-medium group-hover:text-white transition-colors duration-200">
+                        <Icon className="!text-base group-hover:text-white transition-colors duration-200" />
+                        <p
+                           className={cn(
+                              "capitalize text-xs font-medium group-hover:text-white transition-all duration-200 overflow-hidden max-w-7xl",
+                              isSmallLaptops && "max-w-0",
+                           )}
+                        >
                            {title}
                         </p>
                      </Link>
@@ -178,16 +194,31 @@ const NavItems: FC<INavItems> = ({
             }}
             className="transition-all duration-200 ease-in-out"
          >
-            <div className="flex items-center justify-between px-6 py-4">
+            <div
+               className={cn(
+                  "flex items-center justify-between px-3 py-4",
+                  isSmallLaptops && "justify-center",
+               )}
+            >
                <Link
                   to={link}
-                  className="flex items-center gap-3 group flex-1"
+                  className={cn(
+                     "flex items-center gap-3 group flex-1",
+                     isSmallLaptops && "justify-center",
+                  )}
                   style={{ color: professionalTheme.primaryText }}
                >
-                  <Icon className="text-xl group-hover:scale-105 transition-transform duration-200" />
-                  <p className="capitalize font-semibold tracking-wide">{title}</p>
+                  <Icon className="!text-xl group-hover:scale-105 transition-transform duration-200" />
+                  <p
+                     className={cn(
+                        "capitalize !text-sm font-semibold tracking-wide transition-all duration-200 overflow-hidden max-w-7xl",
+                        isSmallLaptops && "max-w-0",
+                     )}
+                  >
+                     {title}
+                  </p>
                </Link>
-               {navChildren?.length ? (
+               {navChildren?.length && !isSmallLaptops ? (
                   <IconButton
                      disableRipple
                      size="small"
@@ -198,6 +229,7 @@ const NavItems: FC<INavItems> = ({
                         "&:hover": {
                            bgcolor: "rgba(255, 255, 255, 0.1)",
                         },
+                        display: isSmallLaptops ? "none" : undefined,
                      }}
                      onClick={() => {
                         handletoggleView(title);
@@ -205,7 +237,7 @@ const NavItems: FC<INavItems> = ({
                   >
                      <KeyboardArrowDownIcon
                         className={cn(
-                           "transition-all duration-300 ease-in-out",
+                           "transition-all !text-lg duration-300 ease-in-out",
                            navOpened === title && "rotate-180",
                         )}
                      />
