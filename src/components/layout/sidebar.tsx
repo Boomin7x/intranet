@@ -58,7 +58,7 @@ const Sidebar = () => {
 
 export const DashboardLogo = () => {
    const isSmallLaptops = useMediaQuery({ maxWidth: 1200, minWidth: 768 });
-   const isMobile = useMediaQuery({ maxWidth: 768 });
+   // const isMobile = useMediaQuery({ maxWidth: 768 });
    return (
       <Box
          className={cn(
