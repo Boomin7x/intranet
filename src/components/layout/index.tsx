@@ -7,7 +7,7 @@ import { cn } from "../../lib/utils";
 export type MUIIconType = typeof DashboardOutlinedIcon;
 
 const MainDashboardLayout = () => {
-   const isSmallLaptops = useMediaQuery({ maxWidth: 1200, minWidth: 900 });
+   const isSmallLaptops = useMediaQuery({ maxWidth: 1200, minWidth: 768 });
    return (
       <div className="w-screen h-screen overflow-hidden flex ">
          <div

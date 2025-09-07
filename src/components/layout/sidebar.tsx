@@ -57,7 +57,8 @@ const Sidebar = () => {
 };
 
 export const DashboardLogo = () => {
-   const isSmallLaptops = useMediaQuery({ maxWidth: 1200, minWidth: 900 });
+   const isSmallLaptops = useMediaQuery({ maxWidth: 1200, minWidth: 768 });
+   const isMobile = useMediaQuery({ maxWidth: 768 });
    return (
       <Box
          className={cn(
@@ -111,7 +112,7 @@ const NavItems: FC<INavItems> = ({
    const navigate = useNavigate();
    const [searchParams] = useSearchParams();
    const navOpened = searchParams.get("navopened");
-   const isSmallLaptops = useMediaQuery({ maxWidth: 1200, minWidth: 900 });
+   const isSmallLaptops = useMediaQuery({ maxWidth: 1200, minWidth: 768 });
 
    const handletoggleView = (title: string) => {
       if (navOpened === title) {
