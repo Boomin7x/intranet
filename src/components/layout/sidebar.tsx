@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
-import { type FC } from "react";
+import { useEffect, type FC } from "react";
 import type { MUIIconType } from ".";
-import { Link, useNavigate, useSearchParams, type To } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams, type To } from "react-router-dom";
 import { cn } from "../../lib/utils";
 import { Box, IconButton } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -10,28 +10,18 @@ import { useMediaQuery } from "react-responsive";
 
 // Professional color scheme
 export const professionalTheme = {
-   // Main sidebar background - sophisticated dark blue-gray
    sidebarBackground: "#1e293b", // slate-800
-
-   // Active item background - subtle blue accent
    activeBackground: "#3b82f6", // blue-500
-
-   // Hover states
    hoverBackground: "#334155", // slate-700
-
-   // Text colors
    primaryText: "#ffffff",
    secondaryText: "#cbd5e1", // slate-300
-
-   // Logo gradient
    logoGradientFrom: "#4f46e5", // indigo-600
    logoGradientTo: "#7c3aed", // violet-600
-
-   // Children/submenu background
    submenuBackground: "#0f172a", // slate-900
 };
 
 const Sidebar = () => {
+   const { lang } = useParams();
    return (
       <Box
          sx={{
@@ -42,7 +32,7 @@ const Sidebar = () => {
       >
          <DashboardLogo />
          <div className="flex-1 flex flex-col">
-            {navItems.map((items, i) => (
+            {navItems({ lang }).map((items, i) => (
                <NavItems
                   key={"navItems" + i}
                   {...items}
@@ -58,7 +48,6 @@ const Sidebar = () => {
 
 export const DashboardLogo = () => {
    const isSmallLaptops = useMediaQuery({ maxWidth: 1200, minWidth: 768 });
-   // const isMobile = useMediaQuery({ maxWidth: 768 });
    return (
       <Box
          className={cn(
@@ -66,7 +55,6 @@ export const DashboardLogo = () => {
             isSmallLaptops && "justify-center",
          )}
       >
-         {/* Logo Mark */}
          <div
             className="flex items-center justify-center w-8 h-8 rounded-xl shadow-lg shrink-0"
             style={{
@@ -75,8 +63,6 @@ export const DashboardLogo = () => {
          >
             <span className="text-white text-xl font-extrabold">O</span>
          </div>
-
-         {/* Logo Text */}
          <h1
             className={cn(
                "text-xl md:text-2xl font-bold tracking-tight overflow-hidden max-w-7xl transition-all duration-300 ease-in-out",
@@ -131,6 +117,15 @@ const NavItems: FC<INavItems> = ({
       );
    };
 
+   useEffect(() => {
+      searchParams.delete("navopened");
+      if (isSmallLaptops) {
+         navigate({
+            search: "?" + searchParams.toString(),
+         });
+      }
+   }, [isSmallLaptops, navigate, searchParams]);
+
    const renderChildren = (showNav: boolean = false) => {
       if (!navChildren || !navChildren.length) {
          return null;
@@ -157,22 +152,28 @@ const NavItems: FC<INavItems> = ({
                         },
                      }}
                      key={"navChildren" + i}
-                     className="py-3 pl-5  transition-all duration-200 ease-in-out"
+                     className={cn(
+                        "py-3 pl-5  transition-all duration-200 ease-in-out",
+                        isSmallLaptops &&
+                           "p-0 flex items-center !bg-red-300 justify-center w-full aspect-square",
+                     )}
                   >
                      <Link
                         to={link}
-                        className="flex items-center gap-3 group"
+                        className="flex items-center  group"
                         style={{ color: professionalTheme.secondaryText }}
                      >
                         <Icon className="!text-base group-hover:text-white transition-colors duration-200" />
-                        <p
-                           className={cn(
-                              "capitalize text-xs font-medium group-hover:text-white transition-all duration-200 overflow-hidden max-w-7xl",
-                              isSmallLaptops && "max-w-0",
-                           )}
-                        >
-                           {title}
-                        </p>
+                        {!isSmallLaptops && (
+                           <p
+                              className={cn(
+                                 "capitalize text-xs pl-3 font-medium group-hover:text-white transition-all duration-200 overflow-hidden max-w-7xl",
+                                 isSmallLaptops && "max-w-0",
+                              )}
+                           >
+                              {title}
+                           </p>
+                        )}
                      </Link>
                   </Box>
                );

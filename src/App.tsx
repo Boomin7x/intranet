@@ -1,16 +1,8 @@
 import "./App.css";
-// import "@fontsource/outfit"
 
-import { BrowserRouter } from "react-router-dom";
 import AppRoutes from "./route";
 function App() {
-   return (
-      <>
-         <BrowserRouter>
-            <AppRoutes />
-         </BrowserRouter>
-      </>
-   );
+   return <AppRoutes />;
 }
 
 export default App;

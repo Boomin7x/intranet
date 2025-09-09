@@ -11,26 +11,29 @@ import DashboardCustomizeOutlinedIcon from "@mui/icons-material/DashboardCustomi
 import { navigationPath } from "../../utils/navigationPath";
 import type { INavItems } from "./sidebar";
 
-export const navItems: INavItems[] = [
+interface NavItemsProps {
+   lang?: string;
+}
+export const navItems = ({ lang = "fr" }: NavItemsProps): INavItems[] => [
    {
       icons: DashboardOutlinedIcon,
       title: "Dashboard",
       link: {
-         pathname: navigationPath.dashboard,
+         pathname: `/${lang}` + navigationPath.dashboard,
       },
    },
    {
       icons: AttachMoneyIcon,
       title: "Core operations",
       link: {
-         pathname: navigationPath.financeManagement.index,
+         pathname: `/${lang}` + navigationPath.financeManagement.index,
       },
       navChildren: [
          {
             icons: ShoppingCartOutlinedIcon,
             title: "Demand d'achat",
             link: {
-               pathname: navigationPath.financeManagement.demand_achat,
+               pathname: `/${lang}` + navigationPath.financeManagement.demand_achat,
                search: "?navopened=Core+operations",
             },
          },
@@ -38,7 +41,7 @@ export const navItems: INavItems[] = [
             icons: InventoryOutlinedIcon,
             title: "Resources",
             link: {
-               pathname: navigationPath.financeManagement.resource,
+               pathname: `/${lang}` + navigationPath.financeManagement.resource,
                search: "?navopened=Core+operations",
             },
          },
@@ -46,7 +49,7 @@ export const navItems: INavItems[] = [
             icons: DashboardCustomizeOutlinedIcon,
             title: "Partner",
             link: {
-               pathname: navigationPath.financeManagement.partner,
+               pathname: `/${lang}` + navigationPath.financeManagement.partner,
                search: "?navopened=Core+operations",
             },
          },
@@ -54,7 +57,7 @@ export const navItems: INavItems[] = [
             icons: BuildOutlinedIcon,
             title: "Maintainance",
             link: {
-               pathname: navigationPath.financeManagement.maintainance,
+               pathname: `/${lang}` + navigationPath.financeManagement.maintainance,
                search: "?navopened=Core+operations",
             },
          },
@@ -62,7 +65,7 @@ export const navItems: INavItems[] = [
             icons: LocalDiningOutlinedIcon,
             title: "Demand Consumation",
             link: {
-               pathname: navigationPath.financeManagement.demand_consumation,
+               pathname: `/${lang}` + navigationPath.financeManagement.demand_consumation,
                search: "?navopened=Core+operations",
             },
          },
@@ -70,7 +73,7 @@ export const navItems: INavItems[] = [
             icons: DescriptionOutlinedIcon,
             title: "Contract",
             link: {
-               pathname: navigationPath.financeManagement.contract,
+               pathname: `/${lang}` + navigationPath.financeManagement.contract,
                search: "?navopened=Core+operations",
             },
          },
@@ -78,7 +81,7 @@ export const navItems: INavItems[] = [
             icons: AccountBalanceWalletOutlinedIcon,
             title: "Budget",
             link: {
-               pathname: navigationPath.financeManagement.budget,
+               pathname: `/${lang}` + navigationPath.financeManagement.budget,
                search: "?navopened=Core+operations",
             },
          },
