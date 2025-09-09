@@ -28,10 +28,15 @@ import {
 
 import React, { type FC } from "react";
 import ButtonWithDropdown from "../ButtonWithDropdown";
+import { useNavigate, useParams } from "react-router-dom";
+import LanguageSwitcher from "../languageSwithcer";
 interface IDashboardNavbar {
    title?: string;
 }
 const DashboardNavbar: FC<IDashboardNavbar> = ({ title = "Dashboard" }) => {
+   const navigate = useNavigate();
+   const { lang } = useParams();
+
    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
    const toggleProfile = (event: React.MouseEvent<HTMLButtonElement>) =>
       !anchorEl ? setAnchorEl(event.currentTarget) : setAnchorEl(null);
@@ -58,6 +63,7 @@ const DashboardNavbar: FC<IDashboardNavbar> = ({ title = "Dashboard" }) => {
          <div className="flex items-center sticky top-0 justify-between px-6 py-3 border-b border-gray-200 bg-white">
             <h2 className="text-2xl font-bold">{title}</h2>
             <div className="flex items-center gap-2">
+               <LanguageSwitcher />
                {navElements.map((items, i) => {
                   const Icons = items?.icon;
 
@@ -271,7 +277,10 @@ const DashboardNavbar: FC<IDashboardNavbar> = ({ title = "Dashboard" }) => {
 
                      {/* Logout Button */}
                      <MenuItem
-                        onClick={() => console.log("Logout clicked")}
+                        onClick={() => {
+                           console.log("Logout clicked");
+                           navigate(`/${lang}/auth`);
+                        }}
                         className="rounded-lg px-4 py-3 hover:bg-red-50 transition-all duration-200 border border-transparent hover:border-red-100"
                      >
                         <ListItemIcon className="min-w-0 mr-4">

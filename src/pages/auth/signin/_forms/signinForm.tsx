@@ -1,11 +1,47 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { useForm } from "react-hook-form";
+import { yup, yupResolver, type InferFormValues } from "../../../../utils/validation";
+import { toast } from "../../../../utils";
+import { useNavigate, useParams } from "react-router-dom";
+
+const schema = yup.object({
+   email: yup.string().email().required(),
+});
+
+type FormValues = InferFormValues<typeof schema>;
 
 const SigninForm = () => {
+   const { lang = "fr" } = useParams();
+   const navigate = useNavigate();
    const { t } = useTranslation();
 
+   const {
+      register,
+      handleSubmit,
+      formState: { errors, isSubmitting },
+   } = useForm<FormValues>({
+      resolver: yupResolver(schema),
+      mode: "onTouched",
+      defaultValues: { email: "" },
+   });
+
+   const onSubmit = async () => {
+      // TODO: implement sign-in API call
+      // Simulate request
+      await new Promise(() =>
+         setTimeout(() => {
+            toast.success("Sign in successfully");
+            navigate({
+               pathname: `/${lang}/core-operations/demand-achat`,
+               search: "navopened=Core+operations",
+            });
+         }, 500),
+      );
+   };
+
    return (
-      <>
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
          <Box
             sx={{
                paddingY: 1,
@@ -14,12 +50,15 @@ const SigninForm = () => {
             }}
          >
             <TextField
-               type="Email"
+               type="email"
                placeholder="example@email.com"
                label={t("signin.emailLabel")}
                sx={{
                   width: "100%",
                }}
+               error={!!errors.email}
+               helperText={errors.email?.message as string | undefined}
+               {...register("email")}
             />
          </Box>
          <Box
@@ -29,7 +68,10 @@ const SigninForm = () => {
             }}
          >
             <Button
+               type="submit"
                variant="contained"
+               disabled={isSubmitting}
+               loading={isSubmitting}
                sx={{
                   width: "100%",
                   padding: 1.5,
@@ -55,7 +97,7 @@ const SigninForm = () => {
                </Typography>
             </Box>
          </Box>
-      </>
+      </form>
    );
 };
 

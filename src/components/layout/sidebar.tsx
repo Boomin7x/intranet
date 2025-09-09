@@ -3,10 +3,11 @@ import { useEffect, type FC } from "react";
 import type { MUIIconType } from ".";
 import { Link, useNavigate, useParams, useSearchParams, type To } from "react-router-dom";
 import { cn } from "../../lib/utils";
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { navItems } from "./utils";
 import { useMediaQuery } from "react-responsive";
+import theme from "../../theme";
 
 // Professional color scheme
 export const professionalTheme = {
@@ -49,29 +50,29 @@ const Sidebar = () => {
 export const DashboardLogo = () => {
    const isSmallLaptops = useMediaQuery({ maxWidth: 1200, minWidth: 768 });
    return (
-      <Box
-         className={cn(
-            "flex items-center space-x-1 p-3 border-b border-slate-700",
-            isSmallLaptops && "justify-center",
-         )}
-      >
-         <div
+      <Box className={cn("flex items-center space-x-1 p-3 ", isSmallLaptops && "justify-center")}>
+         <Box
             className="flex items-center justify-center w-8 h-8 rounded-xl shadow-lg shrink-0"
-            style={{
-               background: `linear-gradient(135deg, ${professionalTheme.logoGradientFrom} 0%, ${professionalTheme.logoGradientTo} 100%)`,
+            sx={{
+               background: (theme) =>
+                  `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.light} 100%)`,
             }}
          >
             <span className="text-white text-xl font-extrabold">O</span>
-         </div>
-         <h1
+         </Box>
+         <Typography
+            variant="h5"
             className={cn(
                "text-xl md:text-2xl font-bold tracking-tight overflow-hidden max-w-7xl transition-all duration-300 ease-in-out",
                isSmallLaptops && "max-w-0",
             )}
-            style={{ color: professionalTheme.primaryText }}
+            sx={{
+               color: "black",
+               fontWeight: "bold",
+            }}
          >
             Intranet
-         </h1>
+         </Typography>
       </Box>
    );
 };

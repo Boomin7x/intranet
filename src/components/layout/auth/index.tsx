@@ -4,6 +4,7 @@ import { Link, Outlet } from "react-router-dom";
 import { defaultImgs } from "../../../utils";
 import { grey } from "@mui/material/colors";
 import LanguageSwitcher from "../../languageSwithcer";
+import { DashboardLogo } from "../sidebar";
 
 const MainAuthLayout: FC = () => {
    return (
@@ -67,8 +68,11 @@ const MainAuthLayout: FC = () => {
                <Box
                   sx={{
                      p: 2,
+                     display: "flex",
+                     justifyContent: "space-between",
                   }}
                >
+                  <DashboardLogo />
                   <LanguageSwitcher />
                </Box>
                <Box
