@@ -1,0 +1,25 @@
+const homeFrLang = {
+   welcomeMessage: "Bienvenue, Muhammed ! 👋",
+   dashboardSummary: "Voici ce qui se passe dans votre entreprise aujourd'hui",
+   totalUsers: "Nombre total d'utilisateurs",
+   revenueThisQuarter: "Revenus ce trimestre",
+   openTasks: "Tâches ouvertes",
+   newLeads: "Nouveaux prospects",
+   recentActivity: "Activité récente",
+   newUserRegistration: "Nouvelle inscription d'utilisateur terminée",
+   paymentReceived: "Paiement de 1 250 $ reçu",
+   projectCompleted: 'Projet "Refonte du site web" terminé',
+   newTeamMember: "Nouveau membre d'équipe ajouté au marketing",
+   monthlyReportGenerated: "Rapport mensuel généré avec succès",
+   quickActions: "Actions rapides",
+   createNewReport: "Créer un nouveau rapport",
+   generateAnalytics: "Générer des analyses et des informations",
+   manageTeam: "Gérer l'équipe",
+   addUpdateTeamMembers: "Ajouter ou mettre à jour les membres de l'équipe",
+   viewAnalytics: "Afficher les analyses",
+   detailedPerformanceMetrics: "Mesures de performance détaillées",
+   performanceOverview: "Aperçu des performances",
+   chartPlaceholder: "La visualisation du graphique apparaîtra ici",
+};
+
+export default homeFrLang;

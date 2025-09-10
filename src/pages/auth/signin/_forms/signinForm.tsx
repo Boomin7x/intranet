@@ -14,7 +14,7 @@ type FormValues = InferFormValues<typeof schema>;
 const SigninForm = () => {
    const { lang = "fr" } = useParams();
    const navigate = useNavigate();
-   const { t } = useTranslation();
+   const { t } = useTranslation("signin");
 
    const {
       register,
@@ -33,8 +33,7 @@ const SigninForm = () => {
          setTimeout(() => {
             toast.success("Sign in successfully");
             navigate({
-               pathname: `/${lang}/core-operations/demand-achat`,
-               search: "navopened=Core+operations",
+               pathname: `/${lang}/`,
             });
          }, 500),
       );
@@ -52,7 +51,7 @@ const SigninForm = () => {
             <TextField
                type="email"
                placeholder="example@email.com"
-               label={t("signin.emailLabel")}
+               label={t("emailLabel")}
                sx={{
                   width: "100%",
                }}
@@ -78,14 +77,14 @@ const SigninForm = () => {
                   mt: 2,
                }}
             >
-               {t("signin.signInButton")}
+               {t("signInButton")}
             </Button>
             <Box
                sx={{
                   marginY: 1.3,
                }}
             >
-               {t("signin.forgotPassword")}{" "}
+               {t("forgotPassword")}{" "}
                <Typography
                   component="a"
                   href="/auth/forgot-password"
@@ -93,7 +92,7 @@ const SigninForm = () => {
                      color: (theme) => theme.palette.primary.main,
                   }}
                >
-                  {t("signin.recoverLink")}
+                  {t("recoverLink")}
                </Typography>
             </Box>
          </Box>

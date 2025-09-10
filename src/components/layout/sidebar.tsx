@@ -1,38 +1,39 @@
 /* eslint-disable react-refresh/only-export-components */
-import { useEffect, type FC } from "react";
-import type { MUIIconType } from ".";
-import { Link, useNavigate, useParams, useSearchParams, type To } from "react-router-dom";
-import { cn } from "../../lib/utils";
-import { Box, IconButton, Typography } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { navItems } from "./utils";
+import { Box, IconButton, Typography, Tooltip, useTheme, alpha } from "@mui/material";
+import { useEffect, type FC } from "react";
 import { useMediaQuery } from "react-responsive";
-import theme from "../../theme";
-
-// Professional color scheme
-export const professionalTheme = {
-   sidebarBackground: "#1e293b", // slate-800
-   activeBackground: "#3b82f6", // blue-500
-   hoverBackground: "#334155", // slate-700
-   primaryText: "#ffffff",
-   secondaryText: "#cbd5e1", // slate-300
-   logoGradientFrom: "#4f46e5", // indigo-600
-   logoGradientTo: "#7c3aed", // violet-600
-   submenuBackground: "#0f172a", // slate-900
-};
+import { Link, useNavigate, useParams, useSearchParams, type To } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import type { MUIIconType } from ".";
+import { sidebarVisibility } from "../../store/atom";
+import { navItems } from "./utils";
 
 const Sidebar = () => {
    const { lang } = useParams();
+   const theme = useTheme();
+
    return (
       <Box
          sx={{
-            bgcolor: professionalTheme.sidebarBackground,
-            borderRight: "1px solid #334155", // subtle border
+            bgcolor: "background.paper",
+            borderRight: `1px solid ${theme.palette.divider}`,
+            display: "flex",
+            flexDirection: "column",
+            flex: 1,
+            boxShadow: theme.shadows[1],
          }}
-         className="flex-1 flex flex-col"
       >
          <DashboardLogo />
-         <div className="flex-1 flex flex-col">
+         <Box
+            sx={{
+               borderTop: `1px solid ${alpha(theme.palette.primary.light, 0.15)}`,
+               display: "flex",
+               flexDirection: "column",
+               flex: 1,
+               pt: 1,
+            }}
+         >
             {navItems({ lang }).map((items, i) => (
                <NavItems
                   key={"navItems" + i}
@@ -42,33 +43,61 @@ const Sidebar = () => {
                   }
                />
             ))}
-         </div>
+         </Box>
       </Box>
    );
 };
 
 export const DashboardLogo = () => {
+   const theme = useTheme();
    const isSmallLaptops = useMediaQuery({ maxWidth: 1200, minWidth: 768 });
+   const [isFullSidebar] = useRecoilState(sidebarVisibility);
+
    return (
-      <Box className={cn("flex items-center space-x-1 p-3 ", isSmallLaptops && "justify-center")}>
+      <Box
+         sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            p: 3,
+            justifyContent: isSmallLaptops ? "center" : "flex-start",
+         }}
+      >
          <Box
-            className="flex items-center justify-center w-8 h-8 rounded-xl shadow-lg shrink-0"
             sx={{
-               background: (theme) =>
-                  `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.light} 100%)`,
+               display: "flex",
+               alignItems: "center",
+               justifyContent: "center",
+               width: 40,
+               height: 40,
+               borderRadius: 2,
+               background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.light} 100%)`,
+               boxShadow: theme.shadows[3],
+               flexShrink: 0,
             }}
          >
-            <span className="text-white text-xl font-extrabold">O</span>
+            <Typography
+               variant="h5"
+               sx={{
+                  color: "white",
+                  fontWeight: 800,
+                  fontSize: "1.25rem",
+               }}
+            >
+               O
+            </Typography>
          </Box>
          <Typography
             variant="h5"
-            className={cn(
-               "text-xl md:text-2xl font-bold tracking-tight overflow-hidden max-w-7xl transition-all duration-300 ease-in-out",
-               isSmallLaptops && "max-w-0",
-            )}
             sx={{
-               color: "black",
-               fontWeight: "bold",
+               fontSize: { xs: "1.25rem", md: "1.5rem" },
+               fontWeight: 700,
+               letterSpacing: "-0.025em",
+               color: theme.palette.text.primary,
+               overflow: "hidden",
+               maxWidth: isSmallLaptops || !isFullSidebar ? 0 : "200px",
+               transition: "max-width 300ms cubic-bezier(0.4, 0, 0.2, 1)",
+               whiteSpace: "nowrap",
             }}
          >
             Intranet
@@ -83,6 +112,7 @@ interface NavItemProps {
    link?: To;
    isActive?: boolean;
 }
+
 export interface INavItems extends NavItemProps {
    navChildren?: NavItemProps[];
 }
@@ -96,10 +126,14 @@ const NavItems: FC<INavItems> = ({
    isActive = false,
    navChildren,
 }) => {
+   const theme = useTheme();
    const navigate = useNavigate();
    const [searchParams] = useSearchParams();
    const navOpened = searchParams.get("navopened");
    const isSmallLaptops = useMediaQuery({ maxWidth: 1200, minWidth: 768 });
+   const [isSidebarVisible] = useRecoilState(sidebarVisibility);
+
+   console.log({ isSidebarVisible });
 
    const handletoggleView = (title: string) => {
       if (navOpened === title) {
@@ -133,53 +167,93 @@ const NavItems: FC<INavItems> = ({
       }
 
       return (
-         <div
-            className={cn(
-               "flex flex-col h-fit overflow-hidden transition-all duration-300 ease-in-out",
-               showNav ? "max-h-[28rem]" : "max-h-0",
-            )}
+         <Box
+            sx={{
+               display: "flex",
+               flexDirection: "column",
+               overflow: "hidden",
+               maxHeight: showNav ? "450px" : 0,
+               transition: "max-height 300ms cubic-bezier(0.4, 0, 0.2, 1)",
+            }}
          >
             {navChildren.map((items, i) => {
                const { icons: Icon, title, link = "#" } = items;
                return (
-                  <Box
-                     sx={{
-                        bgcolor: showNav ? professionalTheme.submenuBackground : "transparent",
-                        borderLeft: showNav
-                           ? `3px solid ${professionalTheme.activeBackground}`
-                           : "3px solid transparent",
-                        "&:hover": {
-                           bgcolor: showNav ? "#1e1b2e" : "transparent",
-                        },
-                     }}
-                     key={"navChildren" + i}
-                     className={cn(
-                        "py-3 pl-5  transition-all duration-200 ease-in-out",
-                        isSmallLaptops &&
-                           "p-0 flex items-center !bg-red-300 justify-center w-full aspect-square",
-                     )}
+                  <Tooltip
+                     key={"navChildrenTooltip" + i}
+                     title={title}
+                     placement="right"
+                     disableHoverListener={isSidebarVisible && !isSmallLaptops}
+                     arrow
                   >
-                     <Link
-                        to={link}
-                        className="flex items-center  group"
-                        style={{ color: professionalTheme.secondaryText }}
+                     <Box
+                        key={"navChildren" + i}
+                        sx={{
+                           bgcolor: showNav
+                              ? alpha(theme.palette.primary.main, 0.08)
+                              : "transparent",
+                           borderLeft: showNav
+                              ? `3px solid ${theme.palette.primary.main}`
+                              : "3px solid transparent",
+                           py: 2,
+                           pl: 4,
+                           transition: "all 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+                           ...(isSmallLaptops && {
+                              p: 0,
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              width: "100%",
+                              aspectRatio: "1",
+                              bgcolor: alpha(theme.palette.error.main, 0.1),
+                           }),
+                           "&:hover": {
+                              bgcolor: showNav
+                                 ? alpha(theme.palette.primary.main, 0.12)
+                                 : "transparent",
+                           },
+                        }}
                      >
-                        <Icon className="!text-base group-hover:text-white transition-colors duration-200" />
-                        {!isSmallLaptops && (
-                           <p
-                              className={cn(
-                                 "capitalize text-xs pl-3 font-medium group-hover:text-white transition-all duration-200 overflow-hidden max-w-7xl",
-                                 isSmallLaptops && "max-w-0",
-                              )}
-                           >
-                              {title}
-                           </p>
-                        )}
-                     </Link>
-                  </Box>
+                        <Box
+                           component={Link}
+                           to={link}
+                           sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              color: theme.palette.text.secondary,
+                              textDecoration: "none",
+                              "&:hover": {
+                                 color: theme.palette.text.primary,
+                              },
+                           }}
+                        >
+                           <Icon
+                              sx={{
+                                 fontSize: "1rem",
+                                 transition: "color 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+                              }}
+                           />
+                           {isSidebarVisible && (
+                              <Typography
+                                 variant="caption"
+                                 sx={{
+                                    textTransform: "capitalize",
+                                    fontWeight: 500,
+                                    ml: 1.5,
+                                    transition: "all 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+                                    overflow: "hidden",
+                                    maxWidth: isSmallLaptops ? 0 : "200px",
+                                 }}
+                              >
+                                 {title}
+                              </Typography>
+                           )}
+                        </Box>
+                     </Box>
+                  </Tooltip>
                );
             })}
-         </div>
+         </Box>
       );
    };
 
@@ -187,66 +261,104 @@ const NavItems: FC<INavItems> = ({
       <>
          <Box
             sx={{
-               bgcolor: isActive ? professionalTheme.activeBackground : "transparent",
+               bgcolor: isActive ? alpha(theme.palette.primary.main, 0.12) : "transparent",
+               borderLeft: isActive
+                  ? `4px solid ${theme.palette.primary.main}`
+                  : "4px solid transparent",
+               transition: "all 200ms cubic-bezier(0.4, 0, 0.2, 1)",
                "&:hover": {
                   bgcolor: isActive
-                     ? professionalTheme.activeBackground
-                     : professionalTheme.hoverBackground,
+                     ? alpha(theme.palette.primary.main, 0.12)
+                     : alpha(theme.palette.action.hover, 0.04),
                },
-               borderLeft: isActive ? `4px solid #60a5fa` : "4px solid transparent", // blue-300 accent
             }}
-            className="transition-all duration-200 ease-in-out"
          >
-            <div
-               className={cn(
-                  "flex items-center justify-between px-3 py-4",
-                  isSmallLaptops && "justify-center",
-               )}
+            <Tooltip
+               title={title}
+               placement="right"
+               disableHoverListener={isSidebarVisible && !isSmallLaptops}
+               arrow
             >
-               <Link
-                  to={link}
-                  className={cn(
-                     "flex items-center gap-3 group flex-1",
-                     isSmallLaptops && "justify-center",
-                  )}
-                  style={{ color: professionalTheme.primaryText }}
+               <Box
+                  sx={{
+                     display: "flex",
+                     alignItems: "center",
+                     justifyContent: isSmallLaptops ? "center" : "space-between",
+                     px: 3,
+                     py: 2,
+                     cursor: "pointer",
+                  }}
+                  onClick={() => {
+                     handletoggleView(title);
+                  }}
                >
-                  <Icon className="!text-xl group-hover:scale-105 transition-transform duration-200" />
-                  <p
-                     className={cn(
-                        "capitalize !text-sm font-semibold tracking-wide transition-all duration-200 overflow-hidden max-w-7xl",
-                        isSmallLaptops && "max-w-0",
-                     )}
-                  >
-                     {title}
-                  </p>
-               </Link>
-               {navChildren?.length && !isSmallLaptops ? (
-                  <IconButton
-                     disableRipple
-                     size="small"
-                     aria-label="chevron Button"
+                  <Box
+                     component={Link}
+                     to={link}
                      sx={{
-                        color: professionalTheme.primaryText,
-                        padding: "4px",
-                        "&:hover": {
-                           bgcolor: "rgba(255, 255, 255, 0.1)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.5,
+                        flex: 1,
+                        justifyContent: isSmallLaptops ? "center" : "flex-start",
+                        color: theme.palette.text.primary,
+                        textDecoration: "none",
+                        "&:hover .nav-icon": {
+                           transform: "scale(1.05)",
                         },
-                        display: isSmallLaptops ? "none" : undefined,
-                     }}
-                     onClick={() => {
-                        handletoggleView(title);
                      }}
                   >
-                     <KeyboardArrowDownIcon
-                        className={cn(
-                           "transition-all !text-lg duration-300 ease-in-out",
-                           navOpened === title && "rotate-180",
-                        )}
+                     <Icon
+                        className="nav-icon"
+                        sx={{
+                           fontSize: "1.25rem",
+                           transition: "transform 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+                        }}
                      />
-                  </IconButton>
-               ) : null}
-            </div>
+                     {isSidebarVisible && (
+                        <Typography
+                           variant="body2"
+                           sx={{
+                              textTransform: "capitalize",
+                              fontWeight: 600,
+                              letterSpacing: "0.025em",
+                              transition: "all 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+                              overflow: "hidden",
+                              maxWidth: isSmallLaptops ? 0 : "200px",
+                           }}
+                        >
+                           {title}
+                        </Typography>
+                     )}
+                  </Box>
+                  {navChildren?.length && isSidebarVisible && !isSmallLaptops && (
+                     <IconButton
+                        disableRipple
+                        size="small"
+                        aria-label="chevron Button"
+                        sx={{
+                           color: theme.palette.text.secondary,
+                           p: 0.5,
+                           "&:hover": {
+                              bgcolor: alpha(theme.palette.action.hover, 0.08),
+                              color: theme.palette.text.primary,
+                           },
+                        }}
+                        onClick={() => {
+                           handletoggleView(title);
+                        }}
+                     >
+                        <KeyboardArrowDownIcon
+                           sx={{
+                              fontSize: "1.125rem",
+                              transition: "transform 300ms cubic-bezier(0.4, 0, 0.2, 1)",
+                              transform: navOpened === title ? "rotate(180deg)" : "rotate(0deg)",
+                           }}
+                        />
+                     </IconButton>
+                  )}
+               </Box>
+            </Tooltip>
          </Box>
          {renderChildren(navOpened === title)}
       </>

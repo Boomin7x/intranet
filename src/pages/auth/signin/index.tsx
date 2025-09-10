@@ -3,10 +3,10 @@ import AuthFormCard from "../../../components/layout/auth/AuthFormCard";
 import SigninForm from "./_forms/signinForm";
 
 const Signin = () => {
-   const { t } = useTranslation();
+   const { t } = useTranslation("signin");
 
    return (
-      <AuthFormCard title={t("signin.signInTitle")} desciption={t("signin.signInDescription")}>
+      <AuthFormCard title={t("signInTitle")} desciption={t("signInDescription")}>
          <SigninForm />
       </AuthFormCard>
    );

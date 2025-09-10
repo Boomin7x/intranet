@@ -16,6 +16,7 @@ import {
    Box,
    Chip,
    Divider,
+   IconButton,
    ListItemIcon,
    ListItemText,
    MenuItem,
@@ -30,6 +31,9 @@ import React, { type FC } from "react";
 import ButtonWithDropdown from "../ButtonWithDropdown";
 import { useNavigate, useParams } from "react-router-dom";
 import LanguageSwitcher from "../languageSwithcer";
+import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
+import { useRecoilState } from "recoil";
+import { sidebarVisibility } from "../../store/atom";
 interface IDashboardNavbar {
    title?: string;
 }
@@ -41,7 +45,8 @@ const DashboardNavbar: FC<IDashboardNavbar> = ({ title = "Dashboard" }) => {
    const toggleProfile = (event: React.MouseEvent<HTMLButtonElement>) =>
       !anchorEl ? setAnchorEl(event.currentTarget) : setAnchorEl(null);
 
-   console.log({ title });
+   const [, setIsSidebarVisible] = useRecoilState(sidebarVisibility);
+
    const navElements = [
       {
          isActive: false,
@@ -61,7 +66,25 @@ const DashboardNavbar: FC<IDashboardNavbar> = ({ title = "Dashboard" }) => {
    return (
       <>
          <div className="flex items-center sticky top-0 justify-between px-6 py-3 border-b border-gray-200 bg-white">
-            <h2 className="text-2xl font-bold">{title}</h2>
+            <Box
+               sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+               }}
+            >
+               <IconButton
+                  sx={{
+                     borderRadius: "3px",
+                  }}
+                  onClick={() => {
+                     setIsSidebarVisible((prev) => !prev);
+                  }}
+               >
+                  <ViewSidebarOutlinedIcon />
+               </IconButton>
+               <h2 className="text-2xl font-bold">{title}</h2>
+            </Box>
             <div className="flex items-center gap-2">
                <LanguageSwitcher />
                {navElements.map((items, i) => {

@@ -1,0 +1,25 @@
+const homeEnLang = {
+   welcomeMessage: "Welcome back, Muhammed! 👋",
+   dashboardSummary: "Here's what's happening with your business today",
+   totalUsers: "Total Users",
+   revenueThisQuarter: "Revenue This Quarter",
+   openTasks: "Open Tasks",
+   newLeads: "New Leads",
+   recentActivity: "Recent Activity",
+   newUserRegistration: "New user registration completed",
+   paymentReceived: "Payment of $1,250 received",
+   projectCompleted: 'Project "Website Redesign" completed',
+   newTeamMember: "New team member added to Marketing",
+   monthlyReportGenerated: "Monthly report generated successfully",
+   quickActions: "Quick Actions",
+   createNewReport: "Create New Report",
+   generateAnalytics: "Generate analytics and insights",
+   manageTeam: "Manage Team",
+   addUpdateTeamMembers: "Add or update team members",
+   viewAnalytics: "View Analytics",
+   detailedPerformanceMetrics: "Detailed performance metrics",
+   performanceOverview: "Performance Overview",
+   chartPlaceholder: "Chart visualization will appear here",
+};
+
+export default homeEnLang;
