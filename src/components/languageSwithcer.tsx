@@ -1,11 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useMemo } from "react";
-import { useTranslation } from "react-i18next";
-import { useParams, useNavigate } from "react-router-dom";
-import { Button, Menu, MenuItem, Box, Typography, useTheme, alpha, Avatar } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LanguageIcon from "@mui/icons-material/Language";
+import { alpha, Avatar, Box, Button, Menu, MenuItem, Typography, useTheme } from "@mui/material";
 import CountryList from "country-list-with-dial-code-and-flag";
+import React, { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface LanguageOption {
    code: string;
@@ -116,22 +115,23 @@ const LanguageSwitcher = () => {
             aria-expanded={open ? "true" : undefined}
             onClick={handleClick}
             variant="outlined"
-            endIcon={
-               <ExpandMoreIcon
-                  sx={{
-                     transition: "transform 200ms cubic-bezier(0.4, 0, 0.2, 1)",
-                     transform: open ? "rotate(180deg)" : "rotate(0deg)",
-                  }}
-               />
-            }
+            // endIcon={
+            //    <ExpandMoreIcon
+            //       sx={{
+            //          transition: "transform 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+            //          transform: open ? "rotate(180deg)" : "rotate(0deg)",
+            //       }}
+            //    />
+            // }
             sx={{
-               minWidth: 140,
+               // minWidth: 140,
                height: 40,
                borderRadius: 2,
                textTransform: "none",
                fontWeight: 500,
                color: theme.palette.text.primary,
-               borderColor: alpha(theme.palette.divider, 0.3),
+               border: "none",
+               // borderColor: alpha(theme.palette.divider, 0.3),
                bgcolor: "transparent",
                px: 2,
                py: 1,
@@ -148,7 +148,7 @@ const LanguageSwitcher = () => {
                sx={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 1.5,
+                  gap: 1,
                   flex: 1,
                }}
             >
@@ -158,9 +158,10 @@ const LanguageSwitcher = () => {
                   sx={{
                      fontWeight: 500,
                      color: "inherit",
+                     textTransform: "capitalize",
                   }}
                >
-                  {currentLanguage.name}
+                  {currentLanguage.code}
                </Typography>
             </Box>
          </Button>

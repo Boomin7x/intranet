@@ -2,5 +2,5 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 npm run build
-npx prettier --write .
+npm run format
 git add .

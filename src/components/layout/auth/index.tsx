@@ -70,6 +70,7 @@ const MainAuthLayout: FC = () => {
                      p: 2,
                      display: "flex",
                      justifyContent: "space-between",
+                     alignItems: "center",
                   }}
                >
                   <DashboardLogo />

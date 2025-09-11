@@ -1,45 +1,573 @@
-import { Box } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import {
+   Box,
+   Card,
+   CardContent,
+   Typography,
+   Grid,
+   CircularProgress,
+   List,
+   ListItem,
+   ListItemIcon,
+   ListItemText,
+   Divider,
+   Chip,
+   Avatar,
+   useTheme,
+   LinearProgress,
+   IconButton,
+   Grow,
+   Slide,
+   Paper,
+   type PaletteColor,
+} from "@mui/material";
+import {
+   PendingActions,
+   CheckCircle,
+   PieChart,
+   Description,
+   Done,
+   Cancel,
+   Schedule,
+   AutoAwesome,
+   ArrowUpward,
+   ArrowDownward,
+   Speed,
+   Notifications,
+} from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 interface DashboardData {
    pendingRequests: number;
    approvedRequests: number;
    budgetUtilization: number;
-   recentActivity: { id: string; itemName: string; action: string; date: string }[];
+   recentActivity: {
+      id: string;
+      itemName: string;
+      action: string;
+      date: string;
+   }[];
 }
 
 const DemandAchatMainTab: React.FC = () => {
-   const [, setData] = useState<DashboardData>({
-      pendingRequests: 0,
-      approvedRequests: 0,
-      budgetUtilization: 0,
-      recentActivity: [],
-   });
+   const { t } = useTranslation("demandAchatDashboard");
+   const theme = useTheme();
 
-   // Simulated API fetch
+   const [data, setData] = useState<DashboardData | null>(null);
+   const [loading, setLoading] = useState(true);
+   const [animateCards, setAnimateCards] = useState(false);
+
    useEffect(() => {
       const fetchData = async () => {
-         // Replace with actual API call
+         setLoading(true);
+
+         await new Promise((resolve) => setTimeout(resolve, 1500));
+
          const mockData: DashboardData = {
-            pendingRequests: 3,
-            approvedRequests: 5,
-            budgetUtilization: 65,
+            pendingRequests: 24,
+            approvedRequests: 156,
+            budgetUtilization: 73.5,
             recentActivity: [
-               { id: "1", itemName: "Office Chairs", action: "Submitted", date: "2025-08-20" },
-               { id: "2", itemName: "Laptops", action: "Approved", date: "2025-08-19" },
-               { id: "3", itemName: "Printers", action: "Cancelled", date: "2025-08-15" },
+               {
+                  id: "1",
+                  itemName: t("sampleItems.laptops") || "Dell Laptops (10 units)",
+                  action: "submitted",
+                  date: "2024-09-10",
+               },
+               {
+                  id: "2",
+                  itemName: t("sampleItems.printers") || "Office Printers (3 units)",
+                  action: "approved",
+                  date: "2024-09-10",
+               },
+               {
+                  id: "3",
+                  itemName: t("sampleItems.software") || "Software Licenses",
+                  action: "submitted",
+                  date: "2024-09-09",
+               },
+               {
+                  id: "4",
+                  itemName: t("sampleItems.furniture") || "Office Furniture",
+                  action: "cancelled",
+                  date: "2024-09-09",
+               },
+               {
+                  id: "5",
+                  itemName: t("sampleItems.supplies") || "Office Supplies",
+                  action: "approved",
+                  date: "2024-09-08",
+               },
             ],
          };
+
          setData(mockData);
+         setLoading(false);
+         setTimeout(() => setAnimateCards(true), 200);
       };
+
       fetchData();
-   }, []);
+   }, [t]);
+
+   const getActionIcon = (action: string) => {
+      switch (action.toLowerCase()) {
+         case "submitted":
+            return <Description />;
+         case "approved":
+            return <Done />;
+         case "cancelled":
+            return <Cancel />;
+         default:
+            return <Schedule />;
+      }
+   };
+
+   const getActionColor = (action: string) => {
+      switch (action.toLowerCase()) {
+         case "submitted":
+            return theme.palette.primary;
+         case "approved":
+            return theme.palette.success;
+         case "cancelled":
+            return theme.palette.error;
+         default:
+            return theme.palette.grey;
+      }
+   };
+
+   const formatDate = (dateString: string) => {
+      return new Date(dateString).toLocaleDateString("fr-FR", {
+         day: "2-digit",
+         month: "short",
+         year: "numeric",
+      });
+   };
+
+   // Helper functions for trend styling from home/index.tsx
+   const getTrendIcon = (trendUp: boolean) => {
+      if (trendUp) return <ArrowUpward sx={{ fontSize: 16 }} />;
+      return <ArrowDownward sx={{ fontSize: 16 }} />;
+   };
+
+   const getTrendColor = (trendUp: boolean) => {
+      if (trendUp) return theme.palette.success.main;
+      return theme.palette.error.main;
+   };
+
+   const getTrendBackgroundColor = (trendUp: boolean) => {
+      if (trendUp) return theme.palette.success.light + "20";
+      return theme.palette.error.light + "20";
+   };
+
+   if (loading) {
+      return (
+         <Box
+            sx={{
+               flex: 1,
+               display: "flex",
+               alignItems: "center",
+               justifyContent: "center",
+               position: "relative",
+               overflow: "hidden",
+            }}
+         >
+            <Paper
+               sx={{
+                  textAlign: "center",
+                  backdropFilter: "blur(20px)",
+                  position: "relative",
+                  zIndex: 1,
+                  boxShadow: "none",
+               }}
+            >
+               <Box sx={{ position: "relative", display: "inline-block", mb: 3 }}>
+                  <CircularProgress
+                     size={80}
+                     thickness={4}
+                     sx={{
+                        color: theme.palette.primary.main,
+                        filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.1))",
+                     }}
+                  />
+                  <AutoAwesome
+                     sx={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        color: theme.palette.primary.main,
+                        fontSize: 32,
+                        animation: "pulse 2s infinite",
+                     }}
+                  />
+               </Box>
+               <Typography
+                  variant="h5"
+                  sx={{
+                     fontWeight: 600,
+                     background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                     backgroundClip: "text",
+                     WebkitBackgroundClip: "text",
+                     WebkitTextFillColor: "transparent",
+                     mb: 1,
+                  }}
+               >
+                  {t("loading") || "Loading dashboard..."}
+               </Typography>
+               <Typography variant="body2" color="text.secondary">
+                  Preparing your insights...
+               </Typography>
+            </Paper>
+         </Box>
+      );
+   }
+
+   if (!data) {
+      return (
+         <Box className="flex items-center justify-center min-h-96">
+            <Typography variant="h6" color="error">
+               {t("error") || "Error loading dashboard data"}
+            </Typography>
+         </Box>
+      );
+   }
+
+   const metricCards = [
+      {
+         id: "pending",
+         title: t("pendingRequests") || "Pending Requests",
+         value: data.pendingRequests,
+         trend: "+12%",
+         trendUp: true,
+         icon: PendingActions,
+         color: theme.palette.warning,
+         subtitle: t("vsLastMonth") || "vs last month",
+      },
+      {
+         id: "approved",
+         title: t("approvedRequests") || "Approved Requests",
+         value: data.approvedRequests,
+         trend: "+8%",
+         trendUp: true,
+         icon: CheckCircle,
+         color: theme.palette.success,
+         subtitle: t("vsLastMonth") || "vs last month",
+      },
+      {
+         id: "budget",
+         title: t("budgetUtilization") || "Budget Utilization",
+         value: `${data.budgetUtilization}%`,
+         trend: "-3%",
+         trendUp: false,
+         icon: PieChart,
+         color: theme.palette.primary,
+         subtitle: t("vsLastMonth") || "vs last month",
+         progress: data.budgetUtilization,
+      },
+   ];
 
    return (
-      <Box className="flex-1 flex flex-col  p-6">
-         {/* <Divider className="mb-6" /> */}
-         {/*  */}
-         <div className="flex-1 flex items-center justify-center text-2xl">Dashboard overview</div>
+      <Box
+         sx={{
+            minHeight: "100vh",
+            fontFamily: "Outfit, sans-serif",
+         }}
+      >
+         {/* Welcome Section (adapted from home/index.tsx) */}
+         <Box sx={{ mb: 4 }}>
+            <Typography
+               variant="h4"
+               sx={{
+                  fontWeight: 700,
+                  mb: 1,
+                  background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  fontFamily: "Outfit, sans-serif",
+               }}
+            >
+               {t("welcomeMessage") || "Welcome to Your Dashboard"}
+            </Typography>
+            <Typography
+               variant="body1"
+               sx={{
+                  color: theme.palette.grey[600],
+                  fontFamily: "Outfit, sans-serif",
+               }}
+            >
+               {t("dashboardSummary") || "Here's an overview of your purchase requests."}
+            </Typography>
+         </Box>
+
+         {/* KPI Cards (adapted from home/index.tsx) */}
+         <Grid container spacing={3} sx={{ mb: 4 }}>
+            {metricCards.map((card, index) => {
+               const IconComponent = card.icon;
+               return (
+                  <Grid size={4} key={card.id} component="div">
+                     <Grow
+                        in={animateCards}
+                        timeout={800 + index * 200}
+                        style={{ transformOrigin: "0 0 0" }}
+                     >
+                        <Card
+                           elevation={2}
+                           sx={{
+                              height: "100%",
+                              transition: "all 0.3s ease-in-out",
+                              border: `1px solid ${theme.palette.grey[200]}`,
+                              "&:hover": {
+                                 boxShadow: theme.shadows[8],
+                                 borderColor: card.color.light,
+                                 transform: "translateY(-2px)",
+                              },
+                           }}
+                        >
+                           <CardContent sx={{ p: 3 }}>
+                              <Box
+                                 sx={{
+                                    display: "flex",
+                                    alignItems: "flex-start",
+                                    justifyContent: "space-between",
+                                    mb: 2,
+                                 }}
+                              >
+                                 <Box
+                                    sx={{
+                                       p: 1.5,
+                                       borderRadius: 2,
+                                       bgcolor: card.color.main + "15",
+                                       display: "flex",
+                                       alignItems: "center",
+                                       justifyContent: "center",
+                                    }}
+                                 >
+                                    <IconComponent sx={{ color: card.color.main, fontSize: 28 }} />
+                                 </Box>
+                                 <Chip
+                                    size="small"
+                                    label={card.trend}
+                                    icon={getTrendIcon(card.trendUp)}
+                                    sx={{
+                                       fontWeight: 600,
+                                       color: getTrendColor(card.trendUp),
+                                       bgcolor: getTrendBackgroundColor(card.trendUp),
+                                       "& .MuiChip-icon": {
+                                          color: getTrendColor(card.trendUp),
+                                       },
+                                    }}
+                                 />
+                              </Box>
+                              <Typography
+                                 variant="h4"
+                                 sx={{
+                                    fontWeight: 700,
+                                    color: theme.palette.grey[900],
+                                    mb: 0.5,
+                                    fontFamily: "Outfit, sans-serif",
+                                 }}
+                              >
+                                 {card.value}
+                              </Typography>
+                              <Typography
+                                 variant="body2"
+                                 sx={{
+                                    color: theme.palette.grey[600],
+                                    fontFamily: "Outfit, sans-serif",
+                                 }}
+                              >
+                                 {card.title}
+                              </Typography>
+                              {card.progress !== undefined && (
+                                 <Box sx={{ mt: 2 }}>
+                                    <LinearProgress
+                                       variant="determinate"
+                                       value={card.progress}
+                                       sx={{
+                                          height: 8,
+                                          borderRadius: 4,
+                                          backgroundColor: `${card.color.main}15`,
+                                          "& .MuiLinearProgress-bar": {
+                                             borderRadius: 4,
+                                             background: `linear-gradient(90deg, ${card.color.main}, ${card.color.light})`,
+                                          },
+                                       }}
+                                    />
+                                 </Box>
+                              )}
+                           </CardContent>
+                        </Card>
+                     </Grow>
+                  </Grid>
+               );
+            })}
+         </Grid>
+
+         {/* Recent Activity Feed (adapted from home/index.tsx) */}
+         <Slide in={animateCards} direction="up" timeout={1200}>
+            <Card
+               elevation={2}
+               sx={{
+                  border: `1px solid ${theme.palette.grey[200]}`,
+                  transition: "box-shadow 0.3s ease-in-out",
+                  "&:hover": {
+                     boxShadow: theme.shadows[8],
+                  },
+               }}
+            >
+               <CardContent sx={{ p: 3 }}>
+                  <Box
+                     sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        mb: 3,
+                     }}
+                  >
+                     <Typography
+                        variant="h6"
+                        sx={{
+                           fontWeight: 600,
+                           color: theme.palette.grey[900],
+                           fontFamily: "Outfit, sans-serif",
+                        }}
+                     >
+                        {t("recentActivity") || "Recent Activity"}
+                     </Typography>
+                     <IconButton
+                        size="small"
+                        sx={{
+                           color: theme.palette.grey[400],
+                           "&:hover": {
+                              color: theme.palette.primary.main,
+                           },
+                        }}
+                     >
+                        <Notifications />
+                     </IconButton>
+                  </Box>
+
+                  <List
+                     sx={{
+                        p: 0,
+                        maxHeight: 400,
+                        overflowY: "auto",
+                        overflowX: "hidden",
+                        "&::-webkit-scrollbar": {
+                           width: "6px",
+                        },
+                        "&::-webkit-scrollbar-track": {
+                           bgcolor: theme.palette.grey[100],
+                           borderRadius: "10px",
+                        },
+                        "&::-webkit-scrollbar-thumb": {
+                           bgcolor: theme.palette.grey[400],
+                           borderRadius: "10px",
+                        },
+                     }}
+                  >
+                     {data.recentActivity.map((activity, index) => (
+                        <React.Fragment key={activity.id}>
+                           <ListItem
+                              sx={{
+                                 px: 0,
+                                 py: 1.5,
+                                 "&:hover": {
+                                    backgroundColor: `${theme.palette.primary.main}04`,
+                                    transform: "translateX(4px)",
+                                    transition: "all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+                                 },
+                                 transition: "all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+                                 cursor: "pointer",
+                              }}
+                           >
+                              <ListItemIcon sx={{ minWidth: 50 }}>
+                                 <Avatar
+                                    sx={{
+                                       width: 36,
+                                       height: 36,
+                                       bgcolor:
+                                          (getActionColor(activity.action) as PaletteColor).main +
+                                          "15",
+                                       color: (getActionColor(activity.action) as PaletteColor)
+                                          .main,
+                                    }}
+                                 >
+                                    {getActionIcon(activity.action)}
+                                 </Avatar>
+                              </ListItemIcon>
+                              <ListItemText
+                                 sx={{ flex: 1 }}
+                                 primary={
+                                    <Typography
+                                       variant="body2"
+                                       sx={{
+                                          fontWeight: 500,
+                                          color: theme.palette.grey[900],
+                                          mb: 0.5,
+                                          fontFamily: "Outfit, sans-serif",
+                                       }}
+                                    >
+                                       {activity.itemName}
+                                    </Typography>
+                                 }
+                                 secondary={
+                                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                                       <Chip
+                                          label={
+                                             t(`dashboard.actions.${activity.action}`) ||
+                                             activity.action
+                                          }
+                                          size="small"
+                                          sx={{
+                                             backgroundColor: `${(getActionColor(activity.action) as PaletteColor).main}15`,
+                                             color: (
+                                                getActionColor(activity.action) as PaletteColor
+                                             ).main,
+                                             fontWeight: 600,
+                                             textTransform: "capitalize",
+                                             "&:hover": {
+                                                backgroundColor: `${(getActionColor(activity.action) as PaletteColor).main}25`,
+                                             },
+                                          }}
+                                       />
+                                       <Typography
+                                          variant="caption"
+                                          sx={{
+                                             color: theme.palette.grey[500],
+                                             fontFamily: "Outfit, sans-serif",
+                                          }}
+                                       >
+                                          {formatDate(activity.date)}
+                                       </Typography>
+                                    </Box>
+                                 }
+                              />
+                           </ListItem>
+                           {index < data.recentActivity.length - 1 && (
+                              <Divider
+                                 variant="inset"
+                                 component="li"
+                                 sx={{ ml: 6, borderColor: theme.palette.grey[200] }}
+                              />
+                           )}
+                        </React.Fragment>
+                     ))}
+                     {data.recentActivity.length === 0 && (
+                        <Box sx={{ textAlign: "center", py: 4 }}>
+                           <Speed
+                              sx={{ fontSize: 48, color: theme.palette.text.disabled, mb: 2 }}
+                           />
+                           <Typography variant="body1" color="text.secondary">
+                              {t("noRecentActivity") || "No recent activity to display"}
+                           </Typography>
+                        </Box>
+                     )}
+                  </List>
+               </CardContent>
+            </Card>
+         </Slide>
       </Box>
    );
 };
