@@ -41,6 +41,10 @@ const Root = () => {
 
 const routes: RouteObject[] = [
    {
+      path: "/",
+      element: <Navigate to={`/fr/auth`} replace />,
+   },
+   {
       path: "/:lang",
       element: <Root />,
       children: [

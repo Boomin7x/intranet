@@ -65,7 +65,22 @@ const DashboardNavbar: FC<IDashboardNavbar> = ({ title = "Dashboard" }) => {
    ];
    return (
       <>
-         <div className="flex items-center sticky top-0 justify-between px-6 py-3 border-b border-gray-200 bg-white">
+         <Box
+            sx={{
+               display: { xs: "none", md: "flex" },
+               alignItems: "center",
+               position: "sticky",
+               top: 0,
+               justifyContent: "space-between",
+               px: 3,
+               py: 1.5,
+               zIndex: 50,
+               borderBottom: "1px solid",
+               borderColor: "grey.200",
+               bgcolor: "white",
+               flexShrink: 0,
+            }}
+         >
             <Box
                sx={{
                   display: "flex",
@@ -145,7 +160,7 @@ const DashboardNavbar: FC<IDashboardNavbar> = ({ title = "Dashboard" }) => {
                   </div>
                </button>
             </div>
-         </div>
+         </Box>
          <Popover
             id={"profile"}
             open={Boolean(anchorEl)}

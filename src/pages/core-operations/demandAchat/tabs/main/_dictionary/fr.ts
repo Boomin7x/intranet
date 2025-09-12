@@ -8,6 +8,8 @@ const demandAchatFrLang = {
    budgetUtilization: "Utilisation du Budget",
    recentActivity: "Activité Récente",
    noRecentActivity: "Aucune activité récente à afficher",
+   dashboardSummary: "Voici un aperçu de vos demandes d'achat.",
+   welcomeMessage: "Bienvenue dans votre tableau de bord",
    itemName: "Nom de l'Article",
    action: "Action",
    date: "Date",

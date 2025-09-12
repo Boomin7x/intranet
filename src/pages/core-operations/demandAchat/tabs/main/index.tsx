@@ -36,6 +36,7 @@ import {
    Notifications,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
+import { useMediaQuery } from "@mui/material";
 
 interface DashboardData {
    pendingRequests: number;
@@ -52,6 +53,7 @@ interface DashboardData {
 const DemandAchatMainTab: React.FC = () => {
    const { t } = useTranslation("demandAchatDashboard");
    const theme = useTheme();
+   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
    const [data, setData] = useState<DashboardData | null>(null);
    const [loading, setLoading] = useState(true);
@@ -276,7 +278,7 @@ const DemandAchatMainTab: React.FC = () => {
          {/* Welcome Section (adapted from home/index.tsx) */}
          <Box sx={{ mb: 4 }}>
             <Typography
-               variant="h4"
+               variant={isMobile ? "h5" : "h4"}
                sx={{
                   fontWeight: 700,
                   mb: 1,
@@ -290,7 +292,7 @@ const DemandAchatMainTab: React.FC = () => {
                {t("welcomeMessage") || "Welcome to Your Dashboard"}
             </Typography>
             <Typography
-               variant="body1"
+               variant={isMobile ? "body2" : "body1"}
                sx={{
                   color: theme.palette.grey[600],
                   fontFamily: "Outfit, sans-serif",
@@ -305,7 +307,7 @@ const DemandAchatMainTab: React.FC = () => {
             {metricCards.map((card, index) => {
                const IconComponent = card.icon;
                return (
-                  <Grid size={4} key={card.id} component="div">
+                  <Grid size={{ xs: 12, sm: 6, md: 4 }} key={card.id}>
                      <Grow
                         in={animateCards}
                         timeout={800 + index * 200}
@@ -451,8 +453,8 @@ const DemandAchatMainTab: React.FC = () => {
                   <List
                      sx={{
                         p: 0,
-                        maxHeight: 400,
-                        overflowY: "auto",
+                        maxHeight: isMobile ? "auto" : 400,
+                        overflowY: isMobile ? "visible" : "auto",
                         overflowX: "hidden",
                         "&::-webkit-scrollbar": {
                            width: "6px",
@@ -473,6 +475,8 @@ const DemandAchatMainTab: React.FC = () => {
                               sx={{
                                  px: 0,
                                  py: 1.5,
+                                 flexDirection: isMobile ? "column" : "row",
+                                 alignItems: isMobile ? "flex-start" : "center",
                                  "&:hover": {
                                     backgroundColor: `${theme.palette.primary.main}04`,
                                     transform: "translateX(4px)",
@@ -482,74 +486,86 @@ const DemandAchatMainTab: React.FC = () => {
                                  cursor: "pointer",
                               }}
                            >
-                              <ListItemIcon sx={{ minWidth: 50 }}>
-                                 <Avatar
-                                    sx={{
-                                       width: 36,
-                                       height: 36,
-                                       bgcolor:
-                                          (getActionColor(activity.action) as PaletteColor).main +
-                                          "15",
-                                       color: (getActionColor(activity.action) as PaletteColor)
-                                          .main,
-                                    }}
-                                 >
-                                    {getActionIcon(activity.action)}
-                                 </Avatar>
-                              </ListItemIcon>
-                              <ListItemText
-                                 sx={{ flex: 1 }}
-                                 primary={
-                                    <Typography
-                                       variant="body2"
+                              <Box
+                                 sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    mb: isMobile ? 1 : 0,
+                                    width: isMobile ? "100%" : "auto",
+                                 }}
+                              >
+                                 <ListItemIcon sx={{ minWidth: 50 }}>
+                                    <Avatar
                                        sx={{
-                                          fontWeight: 500,
-                                          color: theme.palette.grey[900],
-                                          mb: 0.5,
-                                          fontFamily: "Outfit, sans-serif",
+                                          width: 36,
+                                          height: 36,
+                                          bgcolor:
+                                             (getActionColor(activity.action) as PaletteColor)
+                                                .main + "15",
+                                          color: (getActionColor(activity.action) as PaletteColor)
+                                             .main,
                                        }}
                                     >
-                                       {activity.itemName}
-                                    </Typography>
-                                 }
-                                 secondary={
-                                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                                       <Chip
-                                          label={
-                                             t(`dashboard.actions.${activity.action}`) ||
-                                             activity.action
-                                          }
-                                          size="small"
-                                          sx={{
-                                             backgroundColor: `${(getActionColor(activity.action) as PaletteColor).main}15`,
-                                             color: (
-                                                getActionColor(activity.action) as PaletteColor
-                                             ).main,
-                                             fontWeight: 600,
-                                             textTransform: "capitalize",
-                                             "&:hover": {
-                                                backgroundColor: `${(getActionColor(activity.action) as PaletteColor).main}25`,
-                                             },
-                                          }}
-                                       />
+                                       {getActionIcon(activity.action)}
+                                    </Avatar>
+                                 </ListItemIcon>
+                                 <ListItemText
+                                    primary={
                                        <Typography
-                                          variant="caption"
+                                          variant="body2"
                                           sx={{
-                                             color: theme.palette.grey[500],
+                                             fontWeight: 500,
+                                             color: theme.palette.grey[900],
+                                             mb: 0.5,
                                              fontFamily: "Outfit, sans-serif",
                                           }}
                                        >
-                                          {formatDate(activity.date)}
+                                          {activity.itemName}
                                        </Typography>
-                                    </Box>
-                                 }
-                              />
+                                    }
+                                    sx={{ m: 0, flexShrink: 1, minWidth: 0 }}
+                                 />
+                              </Box>
+
+                              <Box
+                                 sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 1,
+                                    flexWrap: "wrap",
+                                    ml: isMobile ? "50px" : "0", // Align content with icon on mobile
+                                 }}
+                              >
+                                 <Chip
+                                    label={t(`actions.${activity.action}`) || activity.action}
+                                    size="small"
+                                    sx={{
+                                       backgroundColor: `${(getActionColor(activity.action) as PaletteColor).main}15`,
+                                       color: (getActionColor(activity.action) as PaletteColor)
+                                          .main,
+                                       fontWeight: 600,
+                                       textTransform: "capitalize",
+                                       "&:hover": {
+                                          backgroundColor: `${(getActionColor(activity.action) as PaletteColor).main}25`,
+                                       },
+                                    }}
+                                 />
+                                 <Typography
+                                    variant="caption"
+                                    sx={{
+                                       color: theme.palette.grey[500],
+                                       fontFamily: "Outfit, sans-serif",
+                                    }}
+                                 >
+                                    {formatDate(activity.date)}
+                                 </Typography>
+                              </Box>
                            </ListItem>
                            {index < data.recentActivity.length - 1 && (
                               <Divider
                                  variant="inset"
                                  component="li"
-                                 sx={{ ml: 6, borderColor: theme.palette.grey[200] }}
+                                 sx={{ ml: isMobile ? 0 : 6, borderColor: theme.palette.grey[200] }}
                               />
                            )}
                         </React.Fragment>

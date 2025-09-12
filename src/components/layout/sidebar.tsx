@@ -21,6 +21,7 @@ const Sidebar = () => {
             display: "flex",
             flexDirection: "column",
             flex: 1,
+            height: "100%",
             boxShadow: theme.shadows[1],
          }}
       >

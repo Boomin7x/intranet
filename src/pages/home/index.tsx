@@ -21,11 +21,11 @@ import {
    CardContent,
    Chip,
    Divider,
-   Grid,
    IconButton,
    Stack,
    Typography,
    useTheme,
+   useMediaQuery,
 } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -33,6 +33,7 @@ import MainLayout from "../../components/layout/MainLayout";
 
 const DashboardHome: React.FC = () => {
    const theme = useTheme();
+   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
    const { t } = useTranslation("home"); // Use the 'home' namespace
 
    // Mock data for demonstration
@@ -152,16 +153,16 @@ const DashboardHome: React.FC = () => {
       <MainLayout>
          <Box
             sx={{
-               p: 3,
+               p: isMobile ? 2 : 3,
                bgcolor: theme.palette.grey[50],
                minHeight: "100vh",
                fontFamily: "Outfit, sans-serif",
             }}
          >
             {/* Welcome Section */}
-            <Box sx={{ mb: 4 }}>
+            <Box sx={{ mb: isMobile ? 3 : 4 }}>
                <Typography
-                  variant="h4"
+                  variant={isMobile ? "h5" : "h4"}
                   sx={{
                      fontWeight: 700,
                      mb: 1,
@@ -175,7 +176,7 @@ const DashboardHome: React.FC = () => {
                   {t("welcomeMessage")}
                </Typography>
                <Typography
-                  variant="body1"
+                  variant={isMobile ? "body2" : "body1"}
                   sx={{
                      color: theme.palette.grey[600],
                      fontFamily: "Outfit, sans-serif",
@@ -186,13 +187,25 @@ const DashboardHome: React.FC = () => {
             </Box>
 
             {/* KPI Cards */}
-            <Grid container spacing={3} sx={{ mb: 4 }}>
+            <Box
+               sx={{
+                  display: "flex",
+                  flexDirection: isMobile ? "column" : "row",
+                  gap: isMobile ? 2 : 3,
+                  mb: isMobile ? 3 : 4,
+               }}
+            >
                {kpiData.map((kpi, index) => {
                   const IconComponent = kpi.icon;
                   return (
-                     <Grid size={3} key={index}>
-                        {" "}
-                        {/* Ensure Grid item is inside a Grid container */}
+                     <Box
+                        key={index}
+                        sx={{
+                           flex: "1 1 23%", // Distribute space, allow shrinking/growing
+                           minWidth: 0, // Allow content to shrink
+                           width: isMobile ? "100%" : "auto",
+                        }}
+                     >
                         <Card
                            elevation={2}
                            sx={{
@@ -206,7 +219,7 @@ const DashboardHome: React.FC = () => {
                               },
                            }}
                         >
-                           <CardContent sx={{ p: 3 }}>
+                           <CardContent sx={{ p: isMobile ? 2 : 3 }}>
                               <Box
                                  sx={{
                                     display: "flex",
@@ -242,7 +255,7 @@ const DashboardHome: React.FC = () => {
                                  />
                               </Box>
                               <Typography
-                                 variant="h4"
+                                 variant={isMobile ? "h6" : "h4"}
                                  sx={{
                                     fontWeight: 700,
                                     color: theme.palette.grey[900],
@@ -253,7 +266,7 @@ const DashboardHome: React.FC = () => {
                                  {kpi.value}
                               </Typography>
                               <Typography
-                                 variant="body2"
+                                 variant={isMobile ? "caption" : "body2"}
                                  sx={{
                                     color: theme.palette.grey[600],
                                     fontFamily: "Outfit, sans-serif",
@@ -263,18 +276,25 @@ const DashboardHome: React.FC = () => {
                               </Typography>
                            </CardContent>
                         </Card>
-                     </Grid>
+                     </Box>
                   );
                })}
-            </Grid>
+            </Box>
 
-            <Grid container spacing={3}>
-               {" "}
-               {/* Ensure this is a Grid container */}
+            <Box
+               sx={{
+                  display: "flex",
+                  flexDirection: isMobile ? "column" : "row",
+                  gap: isMobile ? 2 : 3,
+               }}
+            >
                {/* Recent Activity Feed */}
-               <Grid size={8}>
-                  {" "}
-                  {/* Ensure Grid item is inside a Grid container */}
+               <Box
+                  sx={{
+                     flex: isMobile ? "1 1 100%" : "2 1 65%",
+                     minWidth: 0,
+                  }}
+               >
                   <Card
                      elevation={2}
                      sx={{
@@ -285,17 +305,17 @@ const DashboardHome: React.FC = () => {
                         },
                      }}
                   >
-                     <CardContent sx={{ p: 3 }}>
+                     <CardContent sx={{ p: isMobile ? 2 : 3 }}>
                         <Box
                            sx={{
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "space-between",
-                              mb: 3,
+                              mb: isMobile ? 2 : 3,
                            }}
                         >
                            <Typography
-                              variant="h6"
+                              variant={isMobile ? "h6" : "h5"}
                               sx={{
                                  fontWeight: 600,
                                  color: theme.palette.grey[900],
@@ -320,8 +340,8 @@ const DashboardHome: React.FC = () => {
                         <Stack
                            spacing={2}
                            sx={{
-                              maxHeight: 400,
-                              overflowY: "auto",
+                              maxHeight: isMobile ? 300 : 400,
+                              overflowY: isMobile ? "auto" : "auto",
                               // Custom scrollbar styles
                               "&::-webkit-scrollbar": {
                                  width: "6px",
@@ -343,17 +363,17 @@ const DashboardHome: React.FC = () => {
                                     <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
                                        <Avatar
                                           sx={{
-                                             width: 40,
-                                             height: 40,
+                                             width: isMobile ? 32 : 40,
+                                             height: isMobile ? 32 : 40,
                                              bgcolor: theme.palette.primary.light,
                                              color: theme.palette.primary.main,
                                           }}
                                        >
-                                          <IconComponent fontSize="small" />
+                                          <IconComponent fontSize={isMobile ? "small" : "medium"} />
                                        </Avatar>
                                        <Box sx={{ flex: 1, minWidth: 0 }}>
                                           <Typography
-                                             variant="body2"
+                                             variant={isMobile ? "body2" : "body1"}
                                              sx={{
                                                 color: theme.palette.grey[900],
                                                 fontWeight: 500,
@@ -370,9 +390,11 @@ const DashboardHome: React.FC = () => {
                                                 color: theme.palette.grey[500],
                                              }}
                                           >
-                                             <AccessTime sx={{ fontSize: 14, mr: 0.5 }} />
+                                             <AccessTime
+                                                sx={{ fontSize: isMobile ? 12 : 14, mr: 0.5 }}
+                                             />
                                              <Typography
-                                                variant="caption"
+                                                variant={isMobile ? "caption" : "body2"}
                                                 sx={{ fontFamily: "Outfit, sans-serif" }}
                                              >
                                                 {activity.timestamp}
@@ -381,7 +403,7 @@ const DashboardHome: React.FC = () => {
                                        </Box>
                                     </Box>
                                     {index < recentActivities.length - 1 && (
-                                       <Divider sx={{ mt: 2 }} />
+                                       <Divider sx={{ mt: isMobile ? 1.5 : 2 }} />
                                     )}
                                  </Box>
                               );
@@ -389,12 +411,15 @@ const DashboardHome: React.FC = () => {
                         </Stack>
                      </CardContent>
                   </Card>
-               </Grid>
+               </Box>
                {/* Right Column */}
-               <Grid size={4}>
-                  {" "}
-                  {/* Ensure Grid item is inside a Grid container */}
-                  <Stack spacing={3}>
+               <Box
+                  sx={{
+                     flex: isMobile ? "1 1 100%" : "1 1 35%",
+                     minWidth: 0,
+                  }}
+               >
+                  <Stack spacing={isMobile ? 2 : 3}>
                      {/* Quick Actions */}
                      <Card
                         elevation={2}
@@ -406,19 +431,19 @@ const DashboardHome: React.FC = () => {
                            },
                         }}
                      >
-                        <CardContent sx={{ p: 3 }}>
+                        <CardContent sx={{ p: isMobile ? 2 : 3 }}>
                            <Typography
-                              variant="h6"
+                              variant={isMobile ? "h6" : "h5"}
                               sx={{
                                  fontWeight: 600,
                                  color: theme.palette.grey[900],
-                                 mb: 2,
+                                 mb: isMobile ? 1.5 : 2,
                                  fontFamily: "Outfit, sans-serif",
                               }}
                            >
                               {t("quickActions")}
                            </Typography>
-                           <Stack spacing={1.5}>
+                           <Stack spacing={isMobile ? 1 : 1.5}>
                               {quickActions.map((action, index) => {
                                  const IconComponent = action.icon;
                                  return (
@@ -429,7 +454,7 @@ const DashboardHome: React.FC = () => {
                                        fullWidth
                                        sx={{
                                           justifyContent: "flex-start",
-                                          p: 2,
+                                          p: isMobile ? 1.5 : 2,
                                           borderColor: theme.palette.grey[300],
                                           color: theme.palette.grey[700],
                                           textAlign: "left",
@@ -444,7 +469,7 @@ const DashboardHome: React.FC = () => {
                                     >
                                        <Box sx={{ textAlign: "left", flex: 1 }}>
                                           <Typography
-                                             variant="body2"
+                                             variant={isMobile ? "body2" : "body1"}
                                              sx={{
                                                 fontWeight: 500,
                                                 fontFamily: "Outfit, sans-serif",
@@ -453,7 +478,7 @@ const DashboardHome: React.FC = () => {
                                              {action.title}
                                           </Typography>
                                           <Typography
-                                             variant="caption"
+                                             variant={isMobile ? "caption" : "body2"}
                                              sx={{
                                                 color: theme.palette.grey[500],
                                                 fontFamily: "Outfit, sans-serif",
@@ -480,13 +505,13 @@ const DashboardHome: React.FC = () => {
                            },
                         }}
                      >
-                        <CardContent sx={{ p: 3 }}>
+                        <CardContent sx={{ p: isMobile ? 2 : 3 }}>
                            <Typography
-                              variant="h6"
+                              variant={isMobile ? "h6" : "h5"}
                               sx={{
                                  fontWeight: 600,
                                  color: theme.palette.grey[900],
-                                 mb: 2,
+                                 mb: isMobile ? 1.5 : 2,
                                  fontFamily: "Outfit, sans-serif",
                               }}
                            >
@@ -538,8 +563,8 @@ const DashboardHome: React.FC = () => {
                         </CardContent>
                      </Card>
                   </Stack>
-               </Grid>
-            </Grid>
+               </Box>
+            </Box>
          </Box>
       </MainLayout>
    );

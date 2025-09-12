@@ -12,15 +12,17 @@ const AuthFormCard: FC<IAuthFormCard> = ({ children, desciption, title }) => {
       <Card
          sx={{
             boxShadow: "none",
-            width: { md: "75%", lg: "60%" },
+            width: { xs: "90%", sm: "80%", md: "75%", lg: "60%" },
+            borderRadius: 2,
          }}
       >
-         <CardContent>
+         <CardContent sx={{ p: { xs: 3, sm: 4, md: 5 } }}>
             <Box>
                <Typography
-                  variant="h4"
+                  variant="h5"
                   sx={{
                      fontWeight: "bold",
+                     mb: 1,
                   }}
                >
                   {title}
@@ -29,12 +31,13 @@ const AuthFormCard: FC<IAuthFormCard> = ({ children, desciption, title }) => {
                   variant="body2"
                   sx={{
                      color: grey[700],
+                     fontSize: { xs: "0.875rem", sm: "1rem" },
                   }}
                >
                   {desciption}
                </Typography>
             </Box>
-            <Box mt={5} />
+            <Box mt={{ xs: 3, sm: 4 }} />
             {children}
          </CardContent>
       </Card>

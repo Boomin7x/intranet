@@ -1,4 +1,4 @@
-import { alpha, Box, Grid, Typography } from "@mui/material";
+import { alpha, Box, Typography } from "@mui/material";
 import type { FC } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { defaultImgs } from "../../../utils";
@@ -8,13 +8,13 @@ import { DashboardLogo } from "../sidebar";
 
 const MainAuthLayout: FC = () => {
    return (
-      <Grid container width="100vw" height="100vh">
-         <Grid
-            size={6}
+      <Box sx={{ display: "flex", width: "100vw", height: "100vh" }}>
+         <Box
             sx={{
-               //    border: (theme) => `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+               flex: 1,
                position: "relative",
                overflow: "hidden",
+               display: { xs: "none", md: "block" },
             }}
          >
             <Box
@@ -38,16 +38,19 @@ const MainAuthLayout: FC = () => {
                   alignItems: "center",
                   justifyContent: "end",
                   fontSize: "3rem",
-                  padding: "4rem",
+                  padding: { xs: "2rem", md: "4rem" },
                   color: (theme) => theme.palette.secondary.contrastText,
                }}
             >
-               <Typography variant="h2">Intranet</Typography>
+               <Typography variant="h4" sx={{ fontSize: { xs: "2.5rem", md: "3rem" } }}>
+                  Intranet
+               </Typography>
                <Typography
-                  variant="body1"
+                  variant="body2"
                   sx={{
                      textAlign: "center",
                      color: grey[400],
+                     fontSize: { xs: "0.9rem", md: "1rem" },
                   }}
                >
                   Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iure, natus similique
@@ -55,60 +58,59 @@ const MainAuthLayout: FC = () => {
                   id. Quasi doloremque veritatis voluptates ipsa quo sed molestias?
                </Typography>
             </Box>
-         </Grid>
-         <Grid size={6}>
+         </Box>
+         <Box
+            sx={{
+               flex: { xs: 1, md: 1 },
+               width: { xs: "100%", md: "auto" },
+               height: "100%",
+               display: "flex",
+               flexDirection: "column",
+            }}
+         >
             <Box
                sx={{
-                  width: "100%",
-                  height: "100%",
+                  p: 2,
                   display: "flex",
-                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                }}
             >
-               <Box
-                  sx={{
-                     p: 2,
-                     display: "flex",
-                     justifyContent: "space-between",
-                     alignItems: "center",
-                  }}
-               >
-                  <DashboardLogo />
-                  <LanguageSwitcher />
-               </Box>
-               <Box
-                  sx={{
-                     flex: 1,
-                     display: "flex",
-                     alignItems: "center",
-                     justifyContent: "center",
-                  }}
-               >
-                  <Outlet />
-               </Box>
-               <Box
-                  sx={{
-                     p: 2,
-                     textAlign: "center",
-                     color: "text.secondary",
-                     fontSize: "0.9rem",
-                  }}
-                  component="footer"
-               >
-                  © Copyright {new Date().getFullYear()} Powered by{" "}
-                  <Typography
-                     component={Link}
-                     to="#"
-                     sx={{
-                        color: (theme) => theme.palette.primary.main,
-                     }}
-                  >
-                     Univsoft
-                  </Typography>
-               </Box>
+               <DashboardLogo />
+               <LanguageSwitcher />
             </Box>
-         </Grid>
-      </Grid>
+            <Box
+               sx={{
+                  flex: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+               }}
+            >
+               <Outlet />
+            </Box>
+            <Box
+               sx={{
+                  p: 2,
+                  textAlign: "center",
+                  color: "text.secondary",
+                  fontSize: "0.9rem",
+               }}
+               component="footer"
+            >
+               © Copyright {new Date().getFullYear()} Powered by{" "}
+               <Typography
+                  component={Link}
+                  to="#"
+                  sx={{
+                     color: (theme) => theme.palette.primary.main,
+                  }}
+               >
+                  Univsoft
+               </Typography>
+            </Box>
+         </Box>
+      </Box>
    );
 };
 

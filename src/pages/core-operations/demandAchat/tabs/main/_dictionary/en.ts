@@ -8,6 +8,8 @@ const demandAchatEnLang = {
    budgetUtilization: "Budget Utilization",
    recentActivity: "Recent Activity",
    noRecentActivity: "No recent activity to display",
+   dashboardSummary: "Here's an overview of your purchase requests.",
+   welcomeMessage: "Welcome to Your Dashboard",
    itemName: "Item Name",
    action: "Action",
    date: "Date",
