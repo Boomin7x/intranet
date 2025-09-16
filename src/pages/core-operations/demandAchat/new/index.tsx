@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import MainFormLayout from "../../../../components/layout/FormLayout";
 import MainLayout from "../../../../components/layout/MainLayout";
+import DemandAchatForm from "./_forms";
 
 const NewDemandAchat = () => {
    return (
@@ -17,7 +18,7 @@ const NewDemandAchat = () => {
                   px: 4,
                }}
             >
-               Stats
+               <DemandAchatForm />
             </Box>
          </MainFormLayout>
       </MainLayout>

@@ -1,6 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { Box, IconButton, Typography, Tooltip, useTheme, alpha } from "@mui/material";
+import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
+import { alpha, Box, IconButton, Popover, Tooltip, Typography, useTheme } from "@mui/material";
+import PopupState, { bindPopover, bindTrigger } from "material-ui-popup-state";
 import { useEffect, type FC } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Link, useNavigate, useParams, useSearchParams, type To } from "react-router-dom";
@@ -8,7 +10,6 @@ import { useRecoilState } from "recoil";
 import type { MUIIconType } from ".";
 import { sidebarVisibility } from "../../store/atom";
 import { navItems } from "./utils";
-import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 
 const Sidebar = () => {
    const { lang } = useParams();
@@ -41,7 +42,8 @@ const Sidebar = () => {
                   key={"navItems" + i}
                   {...items}
                   isActive={
-                     typeof items.link === "object" && items.link?.pathname === location.pathname
+                     typeof items.link === "object" &&
+                     location.pathname.includes(items.link?.pathname ?? "")
                   }
                />
             ))}
@@ -50,7 +52,10 @@ const Sidebar = () => {
    );
 };
 
-export const DashboardLogo = () => {
+interface IDashboardLogo {
+   showSidebarBtn: boolean;
+}
+export const DashboardLogo: FC<Partial<IDashboardLogo>> = ({ showSidebarBtn = true }) => {
    const theme = useTheme();
    const isSmallLaptops = useMediaQuery({ maxWidth: 1200, minWidth: 768 });
    const [isFullSidebar, setIsSidebarVisible] = useRecoilState(sidebarVisibility);
@@ -106,17 +111,19 @@ export const DashboardLogo = () => {
          >
             Intranet
          </Typography>
-         <IconButton
-            sx={{
-               borderRadius: "3px",
-               ml: "auto",
-            }}
-            onClick={() => {
-               setIsSidebarVisible((prev) => !prev);
-            }}
-         >
-            <ViewSidebarOutlinedIcon />
-         </IconButton>
+         {showSidebarBtn && (
+            <IconButton
+               sx={{
+                  borderRadius: "3px",
+                  ml: "auto",
+               }}
+               onClick={() => {
+                  setIsSidebarVisible((prev) => !prev);
+               }}
+            >
+               <ViewSidebarOutlinedIcon />
+            </IconButton>
+         )}
       </Box>
    );
 };
@@ -176,7 +183,7 @@ const NavItems: FC<INavItems> = ({
       }
    }, [isSmallLaptops, navigate, searchParams]);
 
-   const renderChildren = (showNav: boolean = false) => {
+   const renderChildren = (showNav: boolean = false, showLabel: boolean = false) => {
       if (!navChildren || !navChildren.length) {
          return null;
       }
@@ -248,7 +255,7 @@ const NavItems: FC<INavItems> = ({
                                  transition: "color 200ms cubic-bezier(0.4, 0, 0.2, 1)",
                               }}
                            />
-                           {isSidebarVisible && (
+                           {showLabel && (
                               <Typography
                                  variant="caption"
                                  sx={{
@@ -294,88 +301,169 @@ const NavItems: FC<INavItems> = ({
                disableHoverListener={isSidebarVisible && !isSmallLaptops}
                arrow
             >
-               <Box
-                  sx={{
-                     display: "flex",
-                     alignItems: "center",
-                     justifyContent: isSmallLaptops ? "center" : "space-between",
-                     px: 3,
-                     py: 2,
-                     cursor: "pointer",
-                  }}
-                  onClick={() => {
-                     handletoggleView(title);
-                  }}
-               >
-                  <Box
-                     component={Link}
-                     to={link}
-                     sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1.5,
-                        flex: 1,
-                        justifyContent: isSmallLaptops ? "center" : "flex-start",
-                        color: theme.palette.text.primary,
-                        textDecoration: "none",
-                        "&:hover .nav-icon": {
-                           transform: "scale(1.05)",
-                        },
-                     }}
-                  >
-                     <Icon
-                        className="nav-icon"
-                        sx={{
-                           fontSize: "1.25rem",
-                           transition: "transform 200ms cubic-bezier(0.4, 0, 0.2, 1)",
-                        }}
-                     />
-                     {isSidebarVisible && (
-                        <Typography
-                           variant="body2"
+               {(() => {
+                  if (!isSidebarVisible) {
+                     return (
+                        <PopupState
+                           // key={"navElements"}
+                           variant="popover"
+                           popupId={"demo-popup-popover"}
+                        >
+                           {(popupState) => (
+                              <Box
+                                 sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: isSmallLaptops ? "center" : "space-between",
+                                    px: 3,
+                                    py: 2,
+                                    cursor: "pointer",
+                                 }}
+                                 onClick={() => {
+                                    if (!navChildren || !navChildren.length) {
+                                       navigate(link);
+                                    }
+                                 }}
+                              >
+                                 <IconButton
+                                    {...bindTrigger(popupState)}
+                                    sx={{
+                                       display: "flex",
+                                       alignItems: "center",
+                                       gap: 1.5,
+                                       flex: 1,
+                                       justifyContent: isSmallLaptops ? "center" : "flex-start",
+                                       color: theme.palette.text.primary,
+                                       textDecoration: "none",
+                                       "&:hover .nav-icon": {
+                                          transform: "scale(1.05)",
+                                       },
+                                    }}
+                                 >
+                                    <Icon
+                                       className="nav-icon"
+                                       sx={{
+                                          fontSize: "1.25rem",
+                                          transition:
+                                             "transform 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+                                       }}
+                                    />
+                                 </IconButton>
+                                 {!navChildren || !navChildren.length ? null : (
+                                    <Popover
+                                       {...bindPopover(popupState)}
+                                       anchorOrigin={{
+                                          vertical: "top",
+                                          horizontal: "right",
+                                       }}
+                                       transformOrigin={{
+                                          vertical: "top",
+                                          horizontal: "left",
+                                       }}
+                                       sx={{
+                                          ml: 2,
+                                       }}
+                                    >
+                                       <div className="min-w-3xs">
+                                          {renderChildren(true, popupState.isOpen)}
+                                       </div>
+                                    </Popover>
+                                 )}
+                              </Box>
+                           )}
+                        </PopupState>
+                     );
+                  }
+                  return (
+                     <>
+                        <Box
                            sx={{
-                              textTransform: "capitalize",
-                              fontWeight: 600,
-                              letterSpacing: "0.025em",
-                              transition: "all 200ms cubic-bezier(0.4, 0, 0.2, 1)",
-                              overflow: "hidden",
-                              maxWidth: isSmallLaptops ? 0 : "200px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: isSmallLaptops ? "center" : "space-between",
+                              px: 3,
+                              py: 2,
+                              cursor: "pointer",
+                           }}
+                           onClick={() => {
+                              if (isSidebarVisible) {
+                                 handletoggleView(title);
+                              }
                            }}
                         >
-                           {title}
-                        </Typography>
-                     )}
-                  </Box>
-                  {navChildren?.length && isSidebarVisible && !isSmallLaptops && (
-                     <IconButton
-                        disableRipple
-                        size="small"
-                        aria-label="chevron Button"
-                        sx={{
-                           color: theme.palette.text.secondary,
-                           p: 0.5,
-                           "&:hover": {
-                              bgcolor: alpha(theme.palette.action.hover, 0.08),
-                              color: theme.palette.text.primary,
-                           },
-                        }}
-                        onClick={() => {
-                           handletoggleView(title);
-                        }}
-                     >
-                        <KeyboardArrowDownIcon
-                           sx={{
-                              fontSize: "1.125rem",
-                              transition: "transform 300ms cubic-bezier(0.4, 0, 0.2, 1)",
-                              transform: navOpened === title ? "rotate(180deg)" : "rotate(0deg)",
-                           }}
-                        />
-                     </IconButton>
-                  )}
-               </Box>
+                           <Box
+                              component={Link}
+                              to={link}
+                              sx={{
+                                 display: "flex",
+                                 alignItems: "center",
+                                 gap: 1.5,
+                                 flex: 1,
+                                 justifyContent: isSmallLaptops ? "center" : "flex-start",
+                                 color: theme.palette.text.primary,
+                                 textDecoration: "none",
+                                 "&:hover .nav-icon": {
+                                    transform: "scale(1.05)",
+                                 },
+                              }}
+                           >
+                              <Icon
+                                 className="nav-icon"
+                                 sx={{
+                                    fontSize: "1.25rem",
+                                    transition: "transform 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+                                 }}
+                              />
+                              {isSidebarVisible && (
+                                 <Typography
+                                    variant="body2"
+                                    sx={{
+                                       textTransform: "capitalize",
+                                       fontWeight: 600,
+                                       letterSpacing: "0.025em",
+                                       transition: "all 200ms cubic-bezier(0.4, 0, 0.2, 1)",
+                                       overflow: "hidden",
+                                       maxWidth: isSmallLaptops ? 0 : "200px",
+                                    }}
+                                 >
+                                    {title}
+                                 </Typography>
+                              )}
+                           </Box>
+                           {navChildren?.length && isSidebarVisible && !isSmallLaptops && (
+                              <IconButton
+                                 disableRipple
+                                 size="small"
+                                 aria-label="chevron Button"
+                                 sx={{
+                                    color: theme.palette.text.secondary,
+                                    p: 0.5,
+                                    "&:hover": {
+                                       bgcolor: alpha(theme.palette.action.hover, 0.08),
+                                       color: theme.palette.text.primary,
+                                    },
+                                 }}
+                                 onClick={() => {
+                                    handletoggleView(title);
+                                 }}
+                              >
+                                 <KeyboardArrowDownIcon
+                                    sx={{
+                                       fontSize: "1.125rem",
+                                       transition: "transform 300ms cubic-bezier(0.4, 0, 0.2, 1)",
+                                       transform:
+                                          navOpened === title ? "rotate(180deg)" : "rotate(0deg)",
+                                    }}
+                                 />
+                              </IconButton>
+                           )}
+                        </Box>
+                     </>
+                  );
+               })()}
             </Tooltip>
          </Box>
-         {renderChildren(navOpened === title)}
+         {renderChildren(navOpened === title && isSidebarVisible, isSidebarVisible)}
       </>
    );
 };

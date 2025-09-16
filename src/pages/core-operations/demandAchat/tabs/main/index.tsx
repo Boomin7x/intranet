@@ -37,6 +37,8 @@ import {
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import { useMediaQuery } from "@mui/material";
+import ResponsiveTable from "../list/ResponsiveTable";
+import useGetDemandAchatList from "../list/_hooks/useGetDemandAchatList";
 
 interface DashboardData {
    pendingRequests: number;
@@ -160,6 +162,20 @@ const DemandAchatMainTab: React.FC = () => {
       if (trendUp) return theme.palette.success.light + "20";
       return theme.palette.error.light + "20";
    };
+
+   const {
+      headCells,
+      paginatedRequests,
+      filteredRequests,
+      orderBy,
+      order,
+      handleRequestSort,
+      page,
+      rowsPerPage,
+      handleChangePage,
+      handleChangeRowsPerPage,
+      getStatusChipColor,
+   } = useGetDemandAchatList();
 
    if (loading) {
       return (
@@ -407,183 +423,211 @@ const DemandAchatMainTab: React.FC = () => {
          </Grid>
 
          {/* Recent Activity Feed (adapted from home/index.tsx) */}
-         <Slide in={animateCards} direction="up" timeout={1200}>
-            <Card
-               elevation={2}
-               sx={{
-                  border: `1px solid ${theme.palette.grey[200]}`,
-                  transition: "box-shadow 0.3s ease-in-out",
-                  "&:hover": {
-                     boxShadow: theme.shadows[8],
-                  },
-               }}
-            >
-               <CardContent sx={{ p: 3 }}>
-                  <Box
+         <Grid container spacing={3}>
+            <Slide in={animateCards} direction="right" timeout={1200}>
+               <Grid size={8}>
+                  <ResponsiveTable
+                     headCells={headCells}
+                     paginatedRequests={paginatedRequests.splice(0, 5)}
+                     filteredRequests={filteredRequests.splice(0, 5)}
+                     orderBy={orderBy}
+                     order={order}
+                     handleRequestSort={handleRequestSort}
+                     page={page}
+                     rowsPerPage={rowsPerPage}
+                     handleChangePage={handleChangePage}
+                     handleChangeRowsPerPage={handleChangeRowsPerPage}
+                     getStatusChipColor={getStatusChipColor}
+                     showPagination={false}
+                  />
+               </Grid>
+            </Slide>
+            <Grid size={4}>
+               <Slide in={animateCards} direction="up" timeout={1200}>
+                  <Card
+                     elevation={2}
                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        mb: 3,
-                     }}
-                  >
-                     <Typography
-                        variant="h6"
-                        sx={{
-                           fontWeight: 600,
-                           color: theme.palette.grey[900],
-                           fontFamily: "Outfit, sans-serif",
-                        }}
-                     >
-                        {t("recentActivity") || "Recent Activity"}
-                     </Typography>
-                     <IconButton
-                        size="small"
-                        sx={{
-                           color: theme.palette.grey[400],
-                           "&:hover": {
-                              color: theme.palette.primary.main,
-                           },
-                        }}
-                     >
-                        <Notifications />
-                     </IconButton>
-                  </Box>
-
-                  <List
-                     sx={{
-                        p: 0,
-                        maxHeight: isMobile ? "auto" : 400,
-                        overflowY: isMobile ? "visible" : "auto",
-                        overflowX: "hidden",
-                        "&::-webkit-scrollbar": {
-                           width: "6px",
-                        },
-                        "&::-webkit-scrollbar-track": {
-                           bgcolor: theme.palette.grey[100],
-                           borderRadius: "10px",
-                        },
-                        "&::-webkit-scrollbar-thumb": {
-                           bgcolor: theme.palette.grey[400],
-                           borderRadius: "10px",
+                        border: `1px solid ${theme.palette.grey[200]}`,
+                        transition: "box-shadow 0.3s ease-in-out",
+                        "&:hover": {
+                           boxShadow: theme.shadows[8],
                         },
                      }}
                   >
-                     {data.recentActivity.map((activity, index) => (
-                        <React.Fragment key={activity.id}>
-                           <ListItem
+                     <CardContent sx={{ p: 3 }}>
+                        <Box
+                           sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              mb: 3,
+                           }}
+                        >
+                           <Typography
+                              variant="h6"
                               sx={{
-                                 px: 0,
-                                 py: 1.5,
-                                 flexDirection: isMobile ? "column" : "row",
-                                 alignItems: isMobile ? "flex-start" : "center",
-                                 "&:hover": {
-                                    backgroundColor: `${theme.palette.primary.main}04`,
-                                    transform: "translateX(4px)",
-                                    transition: "all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-                                 },
-                                 transition: "all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-                                 cursor: "pointer",
+                                 fontWeight: 600,
+                                 color: theme.palette.grey[900],
+                                 fontFamily: "Outfit, sans-serif",
                               }}
                            >
-                              <Box
-                                 sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    mb: isMobile ? 1 : 0,
-                                    width: isMobile ? "100%" : "auto",
-                                 }}
-                              >
-                                 <ListItemIcon sx={{ minWidth: 50 }}>
-                                    <Avatar
+                              {t("recentActivity") || "Recent Activity"}
+                           </Typography>
+                           <IconButton
+                              size="small"
+                              sx={{
+                                 color: theme.palette.grey[400],
+                                 "&:hover": {
+                                    color: theme.palette.primary.main,
+                                 },
+                              }}
+                           >
+                              <Notifications />
+                           </IconButton>
+                        </Box>
+
+                        <List
+                           sx={{
+                              p: 0,
+                              maxHeight: isMobile ? "auto" : 400,
+                              overflowY: isMobile ? "visible" : "auto",
+                              overflowX: "hidden",
+                              "&::-webkit-scrollbar": {
+                                 width: "6px",
+                              },
+                              "&::-webkit-scrollbar-track": {
+                                 bgcolor: theme.palette.grey[100],
+                                 borderRadius: "10px",
+                              },
+                              "&::-webkit-scrollbar-thumb": {
+                                 bgcolor: theme.palette.grey[400],
+                                 borderRadius: "10px",
+                              },
+                           }}
+                        >
+                           {data.recentActivity.map((activity, index) => (
+                              <React.Fragment key={activity.id}>
+                                 <ListItem
+                                    sx={{
+                                       px: 0,
+                                       py: 1.5,
+                                       flexDirection: isMobile ? "column" : "row",
+                                       alignItems: isMobile ? "flex-start" : "center",
+                                       "&:hover": {
+                                          backgroundColor: `${theme.palette.primary.main}04`,
+                                          transform: "translateX(4px)",
+                                          transition:
+                                             "all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+                                       },
+                                       transition: "all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+                                       cursor: "pointer",
+                                    }}
+                                 >
+                                    <Box
                                        sx={{
-                                          width: 36,
-                                          height: 36,
-                                          bgcolor:
-                                             (getActionColor(activity.action) as PaletteColor)
-                                                .main + "15",
-                                          color: (getActionColor(activity.action) as PaletteColor)
-                                             .main,
+                                          display: "flex",
+                                          alignItems: "center",
+                                          mb: isMobile ? 1 : 0,
+                                          width: isMobile ? "100%" : "auto",
                                        }}
                                     >
-                                       {getActionIcon(activity.action)}
-                                    </Avatar>
-                                 </ListItemIcon>
-                                 <ListItemText
-                                    primary={
-                                       <Typography
-                                          variant="body2"
+                                       <ListItemIcon sx={{ minWidth: 50 }}>
+                                          <Avatar
+                                             sx={{
+                                                width: 36,
+                                                height: 36,
+                                                bgcolor:
+                                                   (getActionColor(activity.action) as PaletteColor)
+                                                      .main + "15",
+                                                color: (
+                                                   getActionColor(activity.action) as PaletteColor
+                                                ).main,
+                                             }}
+                                          >
+                                             {getActionIcon(activity.action)}
+                                          </Avatar>
+                                       </ListItemIcon>
+                                       <ListItemText
+                                          primary={
+                                             <Typography
+                                                variant="body2"
+                                                sx={{
+                                                   fontWeight: 500,
+                                                   color: theme.palette.grey[900],
+                                                   mb: 0.5,
+                                                   fontFamily: "Outfit, sans-serif",
+                                                }}
+                                             >
+                                                {activity.itemName}
+                                             </Typography>
+                                          }
+                                          sx={{ m: 0, flexShrink: 1, minWidth: 0 }}
+                                       />
+                                    </Box>
+
+                                    <Box
+                                       sx={{
+                                          display: "flex",
+                                          alignItems: "center",
+                                          gap: 1,
+                                          flexWrap: "wrap",
+                                          ml: isMobile ? "50px" : "0", // Align content with icon on mobile
+                                       }}
+                                    >
+                                       <Chip
+                                          label={t(`actions.${activity.action}`) || activity.action}
+                                          size="small"
                                           sx={{
-                                             fontWeight: 500,
-                                             color: theme.palette.grey[900],
-                                             mb: 0.5,
+                                             backgroundColor: `${(getActionColor(activity.action) as PaletteColor).main}15`,
+                                             color: (
+                                                getActionColor(activity.action) as PaletteColor
+                                             ).main,
+                                             fontWeight: 600,
+                                             textTransform: "capitalize",
+                                             "&:hover": {
+                                                backgroundColor: `${(getActionColor(activity.action) as PaletteColor).main}25`,
+                                             },
+                                          }}
+                                       />
+                                       <Typography
+                                          variant="caption"
+                                          sx={{
+                                             color: theme.palette.grey[500],
                                              fontFamily: "Outfit, sans-serif",
                                           }}
                                        >
-                                          {activity.itemName}
+                                          {formatDate(activity.date)}
                                        </Typography>
-                                    }
-                                    sx={{ m: 0, flexShrink: 1, minWidth: 0 }}
+                                    </Box>
+                                 </ListItem>
+                                 {index < data.recentActivity.length - 1 && (
+                                    <Divider
+                                       variant="inset"
+                                       component="li"
+                                       sx={{
+                                          ml: isMobile ? 0 : 6,
+                                          borderColor: theme.palette.grey[200],
+                                       }}
+                                    />
+                                 )}
+                              </React.Fragment>
+                           ))}
+                           {data.recentActivity.length === 0 && (
+                              <Box sx={{ textAlign: "center", py: 4 }}>
+                                 <Speed
+                                    sx={{ fontSize: 48, color: theme.palette.text.disabled, mb: 2 }}
                                  />
-                              </Box>
-
-                              <Box
-                                 sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: 1,
-                                    flexWrap: "wrap",
-                                    ml: isMobile ? "50px" : "0", // Align content with icon on mobile
-                                 }}
-                              >
-                                 <Chip
-                                    label={t(`actions.${activity.action}`) || activity.action}
-                                    size="small"
-                                    sx={{
-                                       backgroundColor: `${(getActionColor(activity.action) as PaletteColor).main}15`,
-                                       color: (getActionColor(activity.action) as PaletteColor)
-                                          .main,
-                                       fontWeight: 600,
-                                       textTransform: "capitalize",
-                                       "&:hover": {
-                                          backgroundColor: `${(getActionColor(activity.action) as PaletteColor).main}25`,
-                                       },
-                                    }}
-                                 />
-                                 <Typography
-                                    variant="caption"
-                                    sx={{
-                                       color: theme.palette.grey[500],
-                                       fontFamily: "Outfit, sans-serif",
-                                    }}
-                                 >
-                                    {formatDate(activity.date)}
+                                 <Typography variant="body1" color="text.secondary">
+                                    {t("noRecentActivity") || "No recent activity to display"}
                                  </Typography>
                               </Box>
-                           </ListItem>
-                           {index < data.recentActivity.length - 1 && (
-                              <Divider
-                                 variant="inset"
-                                 component="li"
-                                 sx={{ ml: isMobile ? 0 : 6, borderColor: theme.palette.grey[200] }}
-                              />
                            )}
-                        </React.Fragment>
-                     ))}
-                     {data.recentActivity.length === 0 && (
-                        <Box sx={{ textAlign: "center", py: 4 }}>
-                           <Speed
-                              sx={{ fontSize: 48, color: theme.palette.text.disabled, mb: 2 }}
-                           />
-                           <Typography variant="body1" color="text.secondary">
-                              {t("noRecentActivity") || "No recent activity to display"}
-                           </Typography>
-                        </Box>
-                     )}
-                  </List>
-               </CardContent>
-            </Card>
-         </Slide>
+                        </List>
+                     </CardContent>
+                  </Card>
+               </Slide>
+            </Grid>
+         </Grid>
       </Box>
    );
 };

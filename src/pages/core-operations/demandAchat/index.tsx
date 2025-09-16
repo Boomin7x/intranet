@@ -233,7 +233,8 @@ const DemandAchatPage = () => {
                   display: "flex",
                   flexDirection: "column",
                   bgcolor: "white",
-                  p: 6,
+                  padding: theme.spacing(2, 3),
+                  // p: 6,
                }}
             >
                <RenderTab />

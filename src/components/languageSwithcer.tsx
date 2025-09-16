@@ -4,7 +4,7 @@ import { alpha, Avatar, Box, Button, Menu, MenuItem, Typography, useTheme } from
 import CountryList from "country-list-with-dial-code-and-flag";
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 interface LanguageOption {
    code: string;
@@ -18,6 +18,7 @@ const LanguageSwitcher = () => {
    const { i18n } = useTranslation();
    const { lang } = useParams();
    const navigate = useNavigate();
+   const [searchParams] = useSearchParams();
    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
    const open = Boolean(anchorEl);
 
@@ -56,7 +57,7 @@ const LanguageSwitcher = () => {
       i18n.changeLanguage(newLang);
       const currentPath = window.location.pathname;
       const newPath = `/${newLang}${currentPath.substring(currentPath.indexOf("/", 1))}`;
-      navigate(newPath, { replace: true });
+      navigate({ pathname: newPath, search: "?" + searchParams.toString() }, { replace: true });
       handleClose();
    };
 

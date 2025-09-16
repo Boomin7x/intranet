@@ -76,7 +76,7 @@ const MainAuthLayout: FC = () => {
                   alignItems: "center",
                }}
             >
-               <DashboardLogo />
+               <DashboardLogo showSidebarBtn={false} />
                <LanguageSwitcher />
             </Box>
             <Box

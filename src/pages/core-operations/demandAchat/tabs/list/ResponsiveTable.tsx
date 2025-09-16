@@ -20,13 +20,11 @@ import {
    Stack,
    Collapse,
    Divider,
-   // Grid,
+   Checkbox, // Import Checkbox
 } from "@mui/material";
-// import Grid from "@mui/material/Grid";
 import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon } from "@mui/icons-material";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-// import type { TFunction } from "react-i18next";
 import type { Request, Order, HeadCell } from "./types.ts";
 
 const ResponsiveTable = ({
@@ -41,7 +39,9 @@ const ResponsiveTable = ({
    handleChangePage,
    handleChangeRowsPerPage,
    getStatusChipColor,
+   showPagination = true,
 }: {
+   showPagination?: boolean;
    headCells: HeadCell[];
    paginatedRequests: Request[];
    filteredRequests: Request[];
@@ -60,6 +60,7 @@ const ResponsiveTable = ({
    const isSmallTablet = useMediaQuery(theme.breakpoints.down("lg"));
 
    const [expandedRows, setExpandedRows] = useState(new Set<string>());
+   const [selected, setSelected] = useState<readonly string[]>([]); // New state for selected items
    const { t } = useTranslation("demandAchatList");
 
    const toggleRowExpansion = (rowId: string) => {
@@ -72,10 +73,43 @@ const ResponsiveTable = ({
       setExpandedRows(newExpanded);
    };
 
+   // New: Handle "select all" checkbox
+   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.checked) {
+         const newSelecteds = paginatedRequests.map((n) => n.id);
+         setSelected(newSelecteds);
+         return;
+      }
+      setSelected([]);
+   };
+
+   // New: Handle individual item checkbox click
+   const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
+      const selectedIndex = selected.indexOf(id);
+      let newSelected: readonly string[] = [];
+
+      if (selectedIndex === -1) {
+         newSelected = newSelected.concat(selected, id);
+      } else if (selectedIndex === 0) {
+         newSelected = newSelected.concat(selected.slice(1));
+      } else if (selectedIndex === selected.length - 1) {
+         newSelected = newSelected.concat(selected.slice(0, -1));
+      } else if (selectedIndex > 0) {
+         newSelected = newSelected.concat(
+            selected.slice(0, selectedIndex),
+            selected.slice(selectedIndex + 1),
+         );
+      }
+      setSelected(newSelected);
+   };
+
+   const isSelected = (id: string) => selected.indexOf(id) !== -1;
+
    // Mobile Card Component
    const MobileCard = ({ request, index }: { request: Request; index: number }) => {
       const isExpanded = expandedRows.has(request.id);
       const isEvenRow = index % 2 === 0;
+      const isItemSelected = isSelected(request.id);
 
       return (
          <Card
@@ -91,6 +125,11 @@ const ResponsiveTable = ({
                   transform: "translateY(-1px)",
                   boxShadow: theme.shadows[2],
                },
+               ...(isItemSelected && {
+                  bgcolor: theme.palette.action.selected,
+                  border: `1px solid ${theme.palette.primary.light}`,
+                  boxShadow: theme.shadows[3],
+               }),
             }}
          >
             <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
@@ -103,24 +142,19 @@ const ResponsiveTable = ({
                      mb: 1,
                   }}
                >
-                  <Box sx={{ flex: 1, minWidth: 0 }}>
+                  <Box sx={{ flex: 1, minWidth: 0, display: "flex", alignItems: "center", gap: 1 }}>
+                     <Checkbox
+                        checked={isItemSelected}
+                        onClick={(event) => handleClick(event, request.id)}
+                        inputProps={{ "aria-labelledby": `mobile-checkbox-${request.id}` }}
+                        size="small"
+                     />
                      <Typography
                         variant="subtitle2"
                         sx={{ fontWeight: 600, color: theme.palette.primary.main, mb: 0.5 }}
+                        id={`mobile-checkbox-${request.id}`}
                      >
                         #{request.id}
-                     </Typography>
-                     <Typography
-                        variant="body2"
-                        sx={{
-                           fontWeight: 500,
-                           mb: 0.5,
-                           overflow: "hidden",
-                           textOverflow: "ellipsis",
-                           whiteSpace: "nowrap",
-                        }}
-                     >
-                        {request.itemName}
                      </Typography>
                   </Box>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1, ml: 1 }}>
@@ -174,10 +208,10 @@ const ResponsiveTable = ({
                         display: "flex",
                         flexDirection: "column",
                         gap: 2,
-                        mt: 0, // Override default Grid mt
+                        mt: 0,
                         width: "100%",
-                        "& > div": { width: "50%" }, // Each direct child Box takes 50% width
-                        "& > div:last-child": { width: "100%" }, // Last child takes 100% width
+                        "& > div": { width: "50%" },
+                        "& > div:last-child": { width: "100%" },
                      }}
                   >
                      <Box>
@@ -224,6 +258,7 @@ const ResponsiveTable = ({
    // Tablet Card Component (Horizontal Layout)
    const TabletCard = ({ request, index }: { request: Request; index: number }) => {
       const isEvenRow = index % 2 === 0;
+      const isItemSelected = isSelected(request.id);
 
       return (
          <Card
@@ -239,6 +274,11 @@ const ResponsiveTable = ({
                   transform: "translateY(-1px)",
                   boxShadow: theme.shadows[1],
                },
+               ...(isItemSelected && {
+                  bgcolor: theme.palette.action.selected,
+                  border: `1px solid ${theme.palette.primary.light}`,
+                  boxShadow: theme.shadows[2],
+               }),
             }}
          >
             <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
@@ -255,7 +295,13 @@ const ResponsiveTable = ({
                      "& > div:nth-of-type(5)": { flexBasis: "10%", textAlign: "center" }, // Actions
                   }}
                >
-                  <Box>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                     <Checkbox
+                        checked={isItemSelected}
+                        onClick={(event) => handleClick(event, request.id)}
+                        inputProps={{ "aria-labelledby": `tablet-checkbox-${request.id}` }}
+                        size="small"
+                     />
                      <Typography
                         variant="caption"
                         sx={{ color: theme.palette.text.secondary, display: "block" }}
@@ -265,6 +311,7 @@ const ResponsiveTable = ({
                      <Typography
                         variant="body2"
                         sx={{ fontWeight: 600, color: theme.palette.primary.main }}
+                        id={`tablet-checkbox-${request.id}`}
                      >
                         #{request.id}
                      </Typography>
@@ -346,6 +393,19 @@ const ResponsiveTable = ({
          <Table stickyHeader aria-label="responsive sticky table">
             <TableHead>
                <TableRow sx={{ bgcolor: theme.palette.grey[100] }}>
+                  <TableCell padding="checkbox">
+                     <Checkbox
+                        indeterminate={
+                           selected.length > 0 && selected.length < paginatedRequests.length
+                        }
+                        checked={
+                           paginatedRequests.length > 0 &&
+                           selected.length === paginatedRequests.length
+                        }
+                        onChange={handleSelectAllClick}
+                        inputProps={{ "aria-label": "select all desserts" }}
+                     />
+                  </TableCell>
                   {headCells.map((headCell) => (
                      <TableCell
                         key={headCell.id}
@@ -398,9 +458,18 @@ const ResponsiveTable = ({
                {paginatedRequests.length > 0 ? (
                   paginatedRequests.map((request, index) => {
                      const isEvenRow = index % 2 === 0;
+                     const isItemSelected = isSelected(request.id);
+                     const labelId = `enhanced-table-checkbox-${index}`;
+
                      return (
                         <TableRow
+                           hover
+                           onClick={(event) => handleClick(event, request.id)}
+                           role="checkbox"
+                           aria-checked={isItemSelected}
+                           tabIndex={-1}
                            key={request.id}
+                           selected={isItemSelected}
                            sx={{
                               bgcolor: isEvenRow
                                  ? theme.palette.background.paper
@@ -412,7 +481,17 @@ const ResponsiveTable = ({
                               transition: "all 0.15s ease-in-out",
                            }}
                         >
+                           <TableCell padding="checkbox">
+                              <Checkbox
+                                 checked={isItemSelected}
+                                 inputProps={{ "aria-labelledby": labelId }}
+                              />
+                           </TableCell>
                            <TableCell
+                              component="th"
+                              id={labelId}
+                              scope="row"
+                              padding="none"
                               sx={{
                                  whiteSpace: "nowrap",
                                  px: isSmallTablet ? 1 : 2,
@@ -494,7 +573,10 @@ const ResponsiveTable = ({
                               <IconButton
                                  color="primary"
                                  size={isSmallTablet ? "small" : "medium"}
-                                 onClick={() => console.log(`View details for ${request.id}`)}
+                                 onClick={(event) => {
+                                    event.stopPropagation(); // Prevent row selection when clicking action button
+                                    console.log(`View details for ${request.id}`);
+                                 }}
                                  aria-label="view details"
                                  sx={{
                                     bgcolor: theme.palette.primary.main + "10",
@@ -514,7 +596,7 @@ const ResponsiveTable = ({
                ) : (
                   <TableRow>
                      <TableCell
-                        colSpan={headCells.length + 1}
+                        colSpan={headCells.length + 2} // +2 for checkbox and actions
                         sx={{
                            textAlign: "center",
                            py: 6,
@@ -636,7 +718,6 @@ const ResponsiveTable = ({
                )}
             </Stack>
          )}
-
          {/* Tablet View */}
          {isTablet && !isMobile && (
             <Stack spacing={1}>
@@ -659,12 +740,10 @@ const ResponsiveTable = ({
                )}
             </Stack>
          )}
-
          {/* Desktop View */}
          {!isTablet && <DesktopTable />}
-
          {/* Enhanced Pagination */}
-         <EnhancedPagination />
+         {showPagination && <EnhancedPagination />}
       </Box>
    );
 };

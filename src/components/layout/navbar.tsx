@@ -30,8 +30,6 @@ import {
 
 import React, { type FC } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useRecoilState } from "recoil";
-import { sidebarVisibility } from "../../store/atom";
 import ButtonWithDropdown from "../ButtonWithDropdown";
 import LanguageSwitcher from "../languageSwithcer";
 interface IDashboardNavbar {
@@ -44,8 +42,6 @@ const DashboardNavbar: FC<IDashboardNavbar> = ({ title = "Dashboard" }) => {
    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
    const toggleProfile = (event: React.MouseEvent<HTMLButtonElement>) =>
       !anchorEl ? setAnchorEl(event.currentTarget) : setAnchorEl(null);
-
-   const [, setIsSidebarVisible] = useRecoilState(sidebarVisibility);
 
    const navElements = [
       {
@@ -96,10 +92,11 @@ const DashboardNavbar: FC<IDashboardNavbar> = ({ title = "Dashboard" }) => {
                   }}
                   size="small"
                   onClick={() => {
-                     setIsSidebarVisible((prev) => !prev);
+                     // setIsSidebarVisible((prev) => !prev);
+                     navigate(-1);
                   }}
                >
-                  <ArrowBackOutlinedIcon sx={{ fontSize: "18pxs" }} />
+                  <ArrowBackOutlinedIcon sx={{ fontSize: "16px" }} />
                </IconButton>
                <h2 className="text-2xl font-bold">{title}</h2>
             </Box>
