@@ -20,6 +20,7 @@ import MainAuthLayout from "./components/layout/auth";
 import Signin from "./pages/auth/signin";
 import { useEffect } from "react";
 import i18n from "./i18n";
+import NewDemandAchat from "./pages/core-operations/demandAchat/new";
 
 const Root = () => {
    const { lang } = useParams();
@@ -68,7 +69,19 @@ const routes: RouteObject[] = [
                            />
                         ),
                      },
-                     { path: "demand-achat", element: <DemandAchatPage /> },
+                     {
+                        path: "demand-achat",
+                        children: [
+                           {
+                              index: true,
+                              element: <DemandAchatPage />,
+                           },
+                           {
+                              path: "new",
+                              element: <NewDemandAchat />,
+                           },
+                        ],
+                     },
                      { path: "resource", element: <ResourcesPage /> },
                      { path: "maintainance", element: <MaintainancePage /> },
                      { path: "demand-consumation", element: <DemandeConsumationPage /> },

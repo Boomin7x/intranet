@@ -8,6 +8,7 @@ import { useRecoilState } from "recoil";
 import type { MUIIconType } from ".";
 import { sidebarVisibility } from "../../store/atom";
 import { navItems } from "./utils";
+import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 
 const Sidebar = () => {
    const { lang } = useParams();
@@ -52,15 +53,17 @@ const Sidebar = () => {
 export const DashboardLogo = () => {
    const theme = useTheme();
    const isSmallLaptops = useMediaQuery({ maxWidth: 1200, minWidth: 768 });
-   const [isFullSidebar] = useRecoilState(sidebarVisibility);
+   const [isFullSidebar, setIsSidebarVisible] = useRecoilState(sidebarVisibility);
 
    return (
       <Box
          sx={{
             display: "flex",
+            flexDirection: isFullSidebar ? "row" : "column",
             alignItems: "center",
-            gap: 1,
+            gap: isFullSidebar ? 1 : 0,
             p: 3,
+            position: "relative",
             justifyContent: isSmallLaptops ? "center" : "flex-start",
          }}
       >
@@ -103,6 +106,17 @@ export const DashboardLogo = () => {
          >
             Intranet
          </Typography>
+         <IconButton
+            sx={{
+               borderRadius: "3px",
+               ml: "auto",
+            }}
+            onClick={() => {
+               setIsSidebarVisible((prev) => !prev);
+            }}
+         >
+            <ViewSidebarOutlinedIcon />
+         </IconButton>
       </Box>
    );
 };

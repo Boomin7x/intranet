@@ -87,7 +87,13 @@ const DemandAchatPage = () => {
    };
 
    const handleOpenNewDemandModal = () => {
-      setOpenNewDemandModal(true);
+      const query = new URLSearchParams(searchParams);
+      query.delete("tabs");
+      navigate({
+         pathname: "/fr/core-operations/demand-achat/new",
+         search: "?" + query.toString(),
+      });
+      // setOpenNewDemandModal(true);
    };
 
    const handleCloseNewDemandModal = () => {
@@ -221,9 +227,17 @@ const DemandAchatPage = () => {
                   </MenuList>
                </Popover>
             </Box>
-            <div className="flex-1 flex flex-col bg-white p-6">
+            <Box
+               sx={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  bgcolor: "white",
+                  p: 6,
+               }}
+            >
                <RenderTab />
-            </div>
+            </Box>
          </div>
 
          <Dialog

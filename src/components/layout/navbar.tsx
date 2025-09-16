@@ -7,6 +7,7 @@ import {
    Person,
    Settings,
 } from "@mui/icons-material";
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
@@ -28,12 +29,11 @@ import {
 } from "@mui/material";
 
 import React, { type FC } from "react";
-import ButtonWithDropdown from "../ButtonWithDropdown";
 import { useNavigate, useParams } from "react-router-dom";
-import LanguageSwitcher from "../languageSwithcer";
-import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 import { useRecoilState } from "recoil";
 import { sidebarVisibility } from "../../store/atom";
+import ButtonWithDropdown from "../ButtonWithDropdown";
+import LanguageSwitcher from "../languageSwithcer";
 interface IDashboardNavbar {
    title?: string;
 }
@@ -90,13 +90,16 @@ const DashboardNavbar: FC<IDashboardNavbar> = ({ title = "Dashboard" }) => {
             >
                <IconButton
                   sx={{
-                     borderRadius: "3px",
+                     borderRadius: "100%",
+                     bgcolor: (theme) => theme.palette.primary.main,
+                     color: (theme) => theme.palette.primary.contrastText,
                   }}
+                  size="small"
                   onClick={() => {
                      setIsSidebarVisible((prev) => !prev);
                   }}
                >
-                  <ViewSidebarOutlinedIcon />
+                  <ArrowBackOutlinedIcon sx={{ fontSize: "18pxs" }} />
                </IconButton>
                <h2 className="text-2xl font-bold">{title}</h2>
             </Box>
