@@ -5,3 +5,8 @@ export const sidebarVisibility = atom({
    key: "sidebarVisibility",
    default: true,
 });
+
+export const actionDrawerState = atom({
+   key: "actionDrawerState",
+   default: false,
+});

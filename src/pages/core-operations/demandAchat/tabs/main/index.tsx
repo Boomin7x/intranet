@@ -20,6 +20,7 @@ import {
    Slide,
    Paper,
    type PaletteColor,
+   Button,
 } from "@mui/material";
 import {
    PendingActions,
@@ -39,6 +40,7 @@ import { useTranslation } from "react-i18next";
 import { useMediaQuery } from "@mui/material";
 import ResponsiveTable from "../list/ResponsiveTable";
 import useGetDemandAchatList from "../list/_hooks/useGetDemandAchatList";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface DashboardData {
    pendingRequests: number;
@@ -56,6 +58,8 @@ const DemandAchatMainTab: React.FC = () => {
    const { t } = useTranslation("demandAchatDashboard");
    const theme = useTheme();
    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+   const navigate = useNavigate();
+   const { lang } = useParams();
 
    const [data, setData] = useState<DashboardData | null>(null);
    const [loading, setLoading] = useState(true);
@@ -425,21 +429,75 @@ const DemandAchatMainTab: React.FC = () => {
          {/* Recent Activity Feed (adapted from home/index.tsx) */}
          <Grid container spacing={3}>
             <Slide in={animateCards} direction="right" timeout={1200}>
-               <Grid size={8}>
-                  <ResponsiveTable
-                     headCells={headCells}
-                     paginatedRequests={paginatedRequests.splice(0, 5)}
-                     filteredRequests={filteredRequests.splice(0, 5)}
-                     orderBy={orderBy}
-                     order={order}
-                     handleRequestSort={handleRequestSort}
-                     page={page}
-                     rowsPerPage={rowsPerPage}
-                     handleChangePage={handleChangePage}
-                     handleChangeRowsPerPage={handleChangeRowsPerPage}
-                     getStatusChipColor={getStatusChipColor}
-                     showPagination={false}
-                  />
+               <Grid size={{ xs: 12, md: 8 }}>
+                  <Card
+                     elevation={2}
+                     sx={{
+                        border: `1px solid ${theme.palette.grey[200]}`,
+                        mb: 3,
+                        transition: "box-shadow 0.3s ease-in-out",
+                        "&:hover": {
+                           boxShadow: theme.shadows[8],
+                        },
+                     }}
+                  >
+                     <CardContent>
+                        <Box
+                           sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              mb: 2,
+                              px: 3,
+                           }}
+                        >
+                           <Typography
+                              variant="h6"
+                              sx={{
+                                 fontWeight: 600,
+                                 color: theme.palette.grey[900],
+                                 fontFamily: "Outfit, sans-serif",
+                                 textTransform: "Capitalize",
+                              }}
+                           >
+                              {t("recentRequests") || "Recent Requests"}
+                           </Typography>
+                           <Button
+                              size="small"
+                              variant="outlined"
+                              color="primary"
+                              sx={{
+                                 textTransform: "none",
+                                 borderRadius: 2,
+                                 fontWeight: 500,
+                                 fontFamily: "Outfit, sans-serif",
+                              }}
+                              onClick={() => {
+                                 // You may want to use a router navigation here
+                                 navigate(
+                                    `/${lang}/core-operations/demand-achat?navopened=Core+operations&tabs=list`,
+                                 );
+                              }}
+                           >
+                              {t("seeAll") || "See All"}
+                           </Button>
+                        </Box>
+                        <ResponsiveTable
+                           headCells={headCells}
+                           paginatedRequests={paginatedRequests.slice(0, 5)}
+                           filteredRequests={filteredRequests.slice(0, 5)}
+                           orderBy={orderBy}
+                           order={order}
+                           handleRequestSort={handleRequestSort}
+                           page={page}
+                           rowsPerPage={rowsPerPage}
+                           handleChangePage={handleChangePage}
+                           handleChangeRowsPerPage={handleChangeRowsPerPage}
+                           getStatusChipColor={getStatusChipColor}
+                           showPagination={false}
+                        />
+                     </CardContent>
+                  </Card>
                </Grid>
             </Slide>
             <Grid size={4}>

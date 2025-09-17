@@ -21,6 +21,11 @@ export const DemandAchatListFrLang = {
          actions: "Actions",
       },
       noRequestsFound: "Aucune demande trouvée",
+      actions: {
+         view: "Voir",
+         edit: "Modifier",
+         delete: "Supprimer",
+      },
       rowsPerPage: "Lignes par page :",
       displayedRows: "{{from}}-{{to}} sur {{count}}",
       status: {

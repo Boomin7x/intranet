@@ -10,6 +10,8 @@ const demandAchatEnLang = {
    noRecentActivity: "No recent activity to display",
    dashboardSummary: "Here's an overview of your purchase requests.",
    welcomeMessage: "Welcome to Your Dashboard",
+   recentRequests: "vs last month",
+   seeAll: "See All",
    itemName: "Item Name",
    action: "Action",
    date: "Date",

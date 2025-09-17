@@ -24,7 +24,12 @@ import DemandAchatValidationWorkFlow from "./tabs/validation-workflow";
 import React from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import AddIcon from "@mui/icons-material/Add";
+import LocalPrintshopOutlinedIcon from "@mui/icons-material/LocalPrintshopOutlined";
 import { grey } from "@mui/material/colors";
+import { useSetRecoilState } from "recoil";
+import { actionDrawerState } from "../../../store/atom";
+import ActionsDrawer from "../_components/ActionsDrawer";
+import TouchAppOutlinedIcon from "@mui/icons-material/TouchAppOutlined";
 
 const DemandAchatPage = () => {
    const navigate = useNavigate();
@@ -34,6 +39,7 @@ const DemandAchatPage = () => {
 
    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
    const [openNewDemandModal, setOpenNewDemandModal] = React.useState(false);
+   const setActionDrawerState = useSetRecoilState(actionDrawerState);
 
    const popoverOpen = Boolean(anchorEl);
 
@@ -115,17 +121,7 @@ const DemandAchatPage = () => {
                   gap: 2,
                }}
             >
-               <Box />
-               <Box sx={{ display: "flex", gap: 1 }}>
-                  <Button
-                     variant="contained"
-                     color="primary"
-                     startIcon={<AddIcon />}
-                     onClick={handleOpenNewDemandModal}
-                     sx={{ textTransform: "capitalize", fontWeight: 600 }}
-                  >
-                     New Demand Achat
-                  </Button>
+               <Box>
                   <Button
                      aria-controls={popoverOpen ? "demand-achat-popover" : undefined}
                      aria-haspopup="true"
@@ -153,6 +149,35 @@ const DemandAchatPage = () => {
                      }}
                   >
                      {navItems.find((item) => item.links === tabs)?.title || "Select View"}
+                  </Button>
+               </Box>
+               <Box sx={{ display: "flex", gap: 1 }}>
+                  <Button
+                     variant="contained"
+                     color="primary"
+                     startIcon={<AddIcon />}
+                     onClick={handleOpenNewDemandModal}
+                     sx={{ textTransform: "capitalize", fontWeight: 600 }}
+                  >
+                     New Demand Achat
+                  </Button>
+                  <Button
+                     variant="contained"
+                     color="primary"
+                     startIcon={<LocalPrintshopOutlinedIcon />}
+                     onClick={() => setActionDrawerState((prev) => !prev)}
+                     sx={{ textTransform: "capitalize", fontWeight: 600 }}
+                  >
+                     Print
+                  </Button>
+                  <Button
+                     variant="contained"
+                     color="primary"
+                     startIcon={<TouchAppOutlinedIcon />}
+                     onClick={() => setActionDrawerState((prev) => !prev)}
+                     sx={{ textTransform: "capitalize", fontWeight: 600 }}
+                  >
+                     Actions
                   </Button>
                </Box>
 
@@ -297,6 +322,7 @@ const DemandAchatPage = () => {
                </Button>
             </DialogActions>
          </Dialog>
+         <ActionsDrawer />
       </MainLayout>
    );
 };

@@ -1,4 +1,3 @@
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import {
    Box,
    Chip,
@@ -14,7 +13,6 @@ import {
    useMediaQuery,
    TableSortLabel,
    TablePagination,
-   Button,
    Card,
    CardContent,
    Stack,
@@ -26,6 +24,12 @@ import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon } from "@mui
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { Request, Order, HeadCell } from "./types.ts";
+import ActionMenu from "../../../../../components/ActionMenu.tsx";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { toast } from "../../../../../utils/toast.ts";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 const ResponsiveTable = ({
    headCells,
@@ -50,7 +54,7 @@ const ResponsiveTable = ({
    handleRequestSort: (property: keyof Request) => void;
    page: number;
    rowsPerPage: number;
-   handleChangePage: (_event: unknown, newPage: number) => void;
+   handleChangePage: (_event: React.MouseEvent<unknown> | null, newPage: number) => void;
    handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) => void;
    getStatusChipColor: (status: Request["status"]) => "success" | "warning" | "error" | "default";
 }) => {
@@ -84,7 +88,7 @@ const ResponsiveTable = ({
    };
 
    // New: Handle individual item checkbox click
-   const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
+   const handleClick = (_event: React.MouseEvent<unknown>, id: string) => {
       const selectedIndex = selected.indexOf(id);
       let newSelected: readonly string[] = [];
 
@@ -237,16 +241,35 @@ const ResponsiveTable = ({
                         </Typography>
                      </Box>
                      <Box sx={{ mt: 1 }}>
-                        <Button
-                           variant="outlined"
-                           size="small"
-                           startIcon={<VisibilityIcon />}
-                           onClick={() => console.log(`View details for ${request.id}`)}
-                           fullWidth
-                           sx={{ borderRadius: 2 }}
-                        >
-                           {t("list.viewDetails") || "View Details"}
-                        </Button>
+                        <ActionMenu
+                           icon={<MoreVertIcon fontSize="small" />}
+                           actions={[
+                              {
+                                 label: t("list.actions.view") || "View",
+                                 icon: <VisibilityOutlinedIcon fontSize="small" />,
+                                 onClick: () => {
+                                    toast.info(`Viewing request ${request.id}`);
+                                    console.log(`View details for ${request.id}`);
+                                 },
+                              },
+                              {
+                                 label: t("list.actions.edit") || "Edit",
+                                 icon: <EditOutlinedIcon fontSize="small" />,
+                                 onClick: () => {
+                                    toast.info(`Editing request ${request.id}`);
+                                    console.log(`Edit details for ${request.id}`);
+                                 },
+                              },
+                              {
+                                 label: t("list.actions.delete") || "Delete",
+                                 icon: <DeleteOutlineOutlinedIcon fontSize="small" color="error" />,
+                                 onClick: () => {
+                                    toast.error(`Deleting request ${request.id}`);
+                                    console.log(`Delete request ${request.id}`);
+                                 },
+                              },
+                           ]}
+                        />
                      </Box>
                   </Box>
                </Collapse>
@@ -362,17 +385,32 @@ const ResponsiveTable = ({
                      />
                   </Box>
                   <Box>
-                     <IconButton
-                        color="primary"
-                        size="small"
-                        onClick={() => console.log(`View details for ${request.id}`)}
-                        sx={{
-                           bgcolor: theme.palette.primary.main + "10",
-                           "&:hover": { bgcolor: theme.palette.primary.main + "20" },
-                        }}
-                     >
-                        <VisibilityIcon fontSize="small" />
-                     </IconButton>
+                     <ActionMenu
+                        icon={<MoreVertIcon fontSize="small" />}
+                        actions={[
+                           {
+                              label: t("list.actions.view") || "View",
+                              onClick: () => {
+                                 toast.info(`Viewing request ${request.id}`);
+                                 console.log(`View details for ${request.id}`);
+                              },
+                           },
+                           {
+                              label: t("list.actions.edit") || "Edit",
+                              onClick: () => {
+                                 toast.info(`Editing request ${request.id}`);
+                                 console.log(`Edit details for ${request.id}`);
+                              },
+                           },
+                           {
+                              label: t("list.actions.delete") || "Delete",
+                              onClick: () => {
+                                 toast.error(`Deleting request ${request.id}`);
+                                 console.log(`Delete request ${request.id}`);
+                              },
+                           },
+                        ]}
+                     />
                   </Box>
                </Box>
             </CardContent>
@@ -570,25 +608,37 @@ const ResponsiveTable = ({
                                  px: isSmallTablet ? 1 : 2,
                               }}
                            >
-                              <IconButton
-                                 color="primary"
-                                 size={isSmallTablet ? "small" : "medium"}
-                                 onClick={(event) => {
-                                    event.stopPropagation(); // Prevent row selection when clicking action button
-                                    console.log(`View details for ${request.id}`);
-                                 }}
-                                 aria-label="view details"
-                                 sx={{
-                                    bgcolor: theme.palette.primary.main + "10",
-                                    "&:hover": {
-                                       bgcolor: theme.palette.primary.main + "20",
-                                       transform: "scale(1.1)",
+                              <ActionMenu
+                                 icon={
+                                    <MoreVertIcon fontSize={isSmallTablet ? "small" : "medium"} />
+                                 }
+                                 actions={[
+                                    {
+                                       label: t("list.actions.view") || "View",
+                                       onClick: (event: React.MouseEvent<unknown>) => {
+                                          event.stopPropagation();
+                                          toast.info(`Viewing request ${request.id}`);
+                                          console.log(`View details for ${request.id}`);
+                                       },
                                     },
-                                    transition: "all 0.2s ease-in-out",
-                                 }}
-                              >
-                                 <VisibilityIcon fontSize={isSmallTablet ? "small" : "medium"} />
-                              </IconButton>
+                                    {
+                                       label: t("list.actions.edit") || "Edit",
+                                       onClick: (event: React.MouseEvent<unknown>) => {
+                                          event.stopPropagation();
+                                          toast.info(`Editing request ${request.id}`);
+                                          console.log(`Edit details for ${request.id}`);
+                                       },
+                                    },
+                                    {
+                                       label: t("list.actions.delete") || "Delete",
+                                       onClick: (event: React.MouseEvent<unknown>) => {
+                                          event.stopPropagation();
+                                          toast.error(`Deleting request ${request.id}`);
+                                          console.log(`Delete request ${request.id}`);
+                                       },
+                                    },
+                                 ]}
+                              />
                            </TableCell>
                         </TableRow>
                      );

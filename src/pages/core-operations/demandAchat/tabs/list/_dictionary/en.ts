@@ -21,6 +21,11 @@ export const DemandAchatListEnLang = {
          actions: "Actions",
       },
       noRequestsFound: "No requests found",
+      actions: {
+         view: "View",
+         edit: "Edit",
+         delete: "Delete",
+      },
       rowsPerPage: "Rows per page:",
       displayedRows: "{{from}}-{{to}} of {{count}}",
       status: {

@@ -10,6 +10,8 @@ const demandAchatFrLang = {
    noRecentActivity: "Aucune activité récente à afficher",
    dashboardSummary: "Voici un aperçu de vos demandes d'achat.",
    welcomeMessage: "Bienvenue dans votre tableau de bord",
+   recentRequests: "par rapport au mois dernier",
+   seeAll: "Tout voir",
    itemName: "Nom de l'Article",
    action: "Action",
    date: "Date",
