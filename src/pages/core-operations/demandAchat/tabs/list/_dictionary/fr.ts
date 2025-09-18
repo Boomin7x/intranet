@@ -23,8 +23,8 @@ export const DemandAchatListFrLang = {
       noRequestsFound: "Aucune demande trouvée",
       actions: {
          view: "Voir",
-         edit: "Modifier",
-         delete: "Supprimer",
+         print: "Imprimer",
+         cancel: "Annuler",
       },
       rowsPerPage: "Lignes par page :",
       displayedRows: "{{from}}-{{to}} sur {{count}}",

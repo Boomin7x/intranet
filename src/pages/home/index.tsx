@@ -366,7 +366,7 @@ const DashboardHome: React.FC = () => {
                                              width: isMobile ? 32 : 40,
                                              height: isMobile ? 32 : 40,
                                              bgcolor: theme.palette.primary.light,
-                                             color: theme.palette.primary.main,
+                                             color: theme.palette.primary.contrastText,
                                           }}
                                        >
                                           <IconComponent fontSize={isMobile ? "small" : "medium"} />

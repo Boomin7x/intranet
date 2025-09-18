@@ -112,13 +112,13 @@ const DemandAchatPage = () => {
             <Box
                sx={{
                   padding: theme.spacing(2, 3),
-                  // borderBottom: `1px solid ${theme.palette.divider}`,
+                  // Responsive adjustments for header layout
                   bgcolor: theme.palette.background.paper,
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: { xs: "flex-start", sm: "center" },
                   flexDirection: { xs: "column", sm: "row" },
-                  gap: 2,
+                  gap: 2, // Added gap for spacing between elements
                }}
             >
                <Box>
@@ -151,7 +151,14 @@ const DemandAchatPage = () => {
                      {navItems.find((item) => item.links === tabs)?.title || "Select View"}
                   </Button>
                </Box>
-               <Box sx={{ display: "flex", gap: 1 }}>
+               <Box
+                  sx={{
+                     display: "flex",
+                     gap: 1,
+                     flexWrap: "wrap", // Allow buttons to wrap on smaller screens
+                     justifyContent: { xs: "flex-start", sm: "flex-end" }, // Adjust alignment
+                  }}
+               >
                   <Button
                      variant="contained"
                      color="primary"
@@ -172,7 +179,7 @@ const DemandAchatPage = () => {
                   </Button>
                   <Button
                      variant="contained"
-                     color="primary"
+                     color="secondary"
                      startIcon={<TouchAppOutlinedIcon />}
                      onClick={() => setActionDrawerState((prev) => !prev)}
                      sx={{ textTransform: "capitalize", fontWeight: 600 }}
@@ -215,6 +222,9 @@ const DemandAchatPage = () => {
                            transform: "translateY(-50%) rotate(45deg)",
                            zIndex: 0,
                         },
+                        // Responsive width adjustments for the popover
+                        width: { xs: "95%", sm: "auto" },
+                        margin: { xs: 1, sm: 0 },
                      },
                   }}
                >
@@ -259,7 +269,9 @@ const DemandAchatPage = () => {
                   flexDirection: "column",
                   bgcolor: "white",
                   padding: theme.spacing(2, 3),
-                  // p: 6,
+                  // Responsive padding for the main content area
+                  px: { xs: 2, sm: 3 },
+                  py: { xs: 1, sm: 2 },
                }}
             >
                <RenderTab />
@@ -278,6 +290,10 @@ const DemandAchatPage = () => {
                   boxShadow: `0 10px 30px rgba(0,0,0,0.1)`,
                   border: `1px solid ${theme.palette.divider}`,
                   overflow: "hidden",
+                  // Responsive width adjustments for the dialog
+                  width: { xs: "95%", sm: "80%", md: "70%", lg: "50%" },
+                  maxWidth: "none", // Override maxWidth from Dialog component
+                  margin: { xs: 1, sm: 2 }, // Add some margin on smaller screens
                },
             }}
             TransitionProps={{ timeout: 500 }}
@@ -286,15 +302,21 @@ const DemandAchatPage = () => {
                sx={{
                   bgcolor: theme.palette.primary.main,
                   color: theme.palette.primary.contrastText,
-                  padding: theme.spacing(2, 3),
+                  padding: theme.spacing(2, 3), // Default padding
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
                   background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
                   boxShadow: `0 2px 8px rgba(0,0,0,0.1)`,
+                  // Responsive padding for title
+                  px: { xs: 2, sm: 3 },
+                  py: { xs: 1.5, sm: 2 },
                }}
             >
-               <Typography variant="h6" sx={{ fontWeight: 700 }}>
+               <Typography
+                  variant="h6"
+                  sx={{ fontWeight: 700, fontSize: { xs: "1rem", sm: "1.25rem" } }}
+               >
                   Create New Demand Achat
                </Typography>
                <IconButton onClick={handleCloseNewDemandModal} sx={{ color: "white" }}>
@@ -302,16 +324,25 @@ const DemandAchatPage = () => {
                </IconButton>
             </DialogTitle>
             <DialogContent dividers sx={{ p: 4, bgcolor: theme.palette.background.default }}>
-               {/* Placeholder for the actual NewDemandAchat form */}
-               <NewDemandAchat />
+               {/* Responsive padding for content */}
+               <Box sx={{ px: { xs: 1, sm: 2 } }}>
+                  <NewDemandAchat />
+               </Box>
             </DialogContent>
             <DialogActions
                sx={{
-                  padding: theme.spacing(2, 3),
+                  padding: theme.spacing(2, 3), // Default padding
                   bgcolor: theme.palette.grey[100],
                   borderTop: `1px solid ${theme.palette.divider}`,
-                  justifyContent: "flex-end",
+                  justifyContent: { xs: "center", sm: "flex-end" }, // Center buttons on small screens
+                  flexDirection: { xs: "column", sm: "row" }, // Stack buttons on small screens
                   gap: 1,
+                  // Responsive padding for actions
+                  px: { xs: 2, sm: 3 },
+                  py: { xs: 1.5, sm: 2 },
+                  "& > button": {
+                     width: { xs: "100%", sm: "auto" }, // Full width buttons on small screens
+                  },
                }}
             >
                <Button onClick={handleCloseNewDemandModal} variant="outlined" color="secondary">

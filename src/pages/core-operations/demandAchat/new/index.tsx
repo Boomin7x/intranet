@@ -23,7 +23,7 @@ const NewDemandAchat = () => {
          >
             <Box
                sx={{
-                  px: 4,
+                  px: { md: 4 },
                }}
             >
                <DemandAchatForm />

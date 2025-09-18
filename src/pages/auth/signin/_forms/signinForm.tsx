@@ -33,7 +33,7 @@ const SigninForm = () => {
          setTimeout(() => {
             toast.success("Sign in successfully");
             navigate({
-               pathname: `/${lang}/`,
+               pathname: `/${lang}/auth/otp`,
             });
          }, 500),
       );

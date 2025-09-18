@@ -84,7 +84,7 @@ const DemandAchatForm = () => {
          component="form"
          onSubmit={handleSubmit(onSubmit)}
          noValidate
-         sx={{ p: { xs: 2, md: 4 } }}
+         sx={{ p: { xs: 2, md: 4 } }} // Responsive padding for the main form container
       >
          <Paper elevation={3} sx={{ p: { xs: 2, md: 4 }, borderRadius: 2, mb: 4 }}>
             <Typography variant="h5" gutterBottom sx={{ mb: 3, fontWeight: 600 }}>
@@ -160,8 +160,25 @@ const DemandAchatForm = () => {
          </Paper>
 
          <Paper elevation={3} sx={{ p: { xs: 2, md: 4 }, borderRadius: 2, mb: 4 }}>
-            <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-               <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
+            <Box
+               sx={{
+                  display: "flex",
+                  flexDirection: { xs: "column", sm: "row" },
+                  justifyContent: { xs: "flex-start", sm: "space-between" },
+                  alignItems: { xs: "stretch", sm: "center" },
+                  gap: 2,
+                  mb: 3,
+               }}
+            >
+               <Typography
+                  variant="h6"
+                  gutterBottom
+                  sx={{
+                     fontWeight: 600,
+                     mb: { xs: 0.5, sm: 0 },
+                     textAlign: { xs: "left", sm: "inherit" },
+                  }}
+               >
                   {t("form.itemsTitle")}
                </Typography>
                <Button
@@ -169,6 +186,10 @@ const DemandAchatForm = () => {
                   startIcon={<AddIcon />}
                   onClick={() => append({ description: "", quantity: 1, unitPrice: 0 })}
                   disabled={isSubmitting}
+                  sx={{
+                     width: { xs: "100%", sm: "auto" },
+                     alignSelf: { xs: "stretch", sm: "center" },
+                  }}
                >
                   {t("form.addItem")}
                </Button>
@@ -177,7 +198,12 @@ const DemandAchatForm = () => {
             {fields.map((field, index) => (
                <Box
                   key={field.id}
-                  sx={{ mb: 3, p: 2, border: "1px solid #e0e0e0", borderRadius: 1 }}
+                  sx={{
+                     mb: 3,
+                     p: { xs: 1.5, md: 2 },
+                     border: "1px solid #e0e0e0",
+                     borderRadius: 1,
+                  }} // Responsive padding for item cards
                >
                   <Grid container spacing={{ xs: 1, md: 2 }} alignItems="center">
                      <Grid size={{ xs: 12, sm: 6, md: 5 }}>
@@ -213,8 +239,8 @@ const DemandAchatForm = () => {
                         />
                      </Grid>
                      <Grid
-                        size={{ xs: 12, md: 1 }}
-                        sx={{ display: "flex", justifyContent: "center" }}
+                        size={{ xs: 12, md: 1 }} // Take full width on xs, then smaller on md
+                        sx={{ display: "flex", justifyContent: { xs: "flex-end", md: "center" } }} // Align to end on xs, center on md
                      >
                         <IconButton
                            onClick={() => remove(index)}

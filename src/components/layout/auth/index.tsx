@@ -5,8 +5,11 @@ import { defaultImgs } from "../../../utils";
 import { grey } from "@mui/material/colors";
 import LanguageSwitcher from "../../languageSwithcer";
 import { DashboardLogo } from "../sidebar";
+import { useTranslation } from "react-i18next";
 
 const MainAuthLayout: FC = () => {
+   const { t } = useTranslation("authLayout");
+
    return (
       <Box sx={{ display: "flex", width: "100vw", height: "100vh" }}>
          <Box
@@ -25,7 +28,9 @@ const MainAuthLayout: FC = () => {
                   position: "absolute",
                   inset: 0,
                   objectFit: "cover",
-                  objectPosition: "center",
+                  objectPosition: "bottom",
+                  width: "100%",
+                  height: "100%",
                }}
             />
             <Box
@@ -53,9 +58,8 @@ const MainAuthLayout: FC = () => {
                      fontSize: { xs: "0.9rem", md: "1rem" },
                   }}
                >
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iure, natus similique
-                  rem pariatur iusto totam tenetur exercitationem veniam corporis suscipit molestias
-                  id. Quasi doloremque veritatis voluptates ipsa quo sed molestias?
+                  {t("welcomeMessage")}
+                  <br /> {t("welcomeDescription")}
                </Typography>
             </Box>
          </Box>

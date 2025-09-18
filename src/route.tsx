@@ -21,6 +21,7 @@ import Signin from "./pages/auth/signin";
 import { useEffect } from "react";
 import i18n from "./i18n";
 import NewDemandAchat from "./pages/core-operations/demandAchat/new";
+import Otp from "./pages/auth/otp";
 
 const Root = () => {
    const { lang } = useParams();
@@ -109,6 +110,10 @@ const routes: RouteObject[] = [
                {
                   path: "signin",
                   element: <Signin />,
+               },
+               {
+                  path: "otp",
+                  element: <Otp />,
                },
             ],
          },

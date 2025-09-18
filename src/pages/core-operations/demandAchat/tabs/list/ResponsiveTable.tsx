@@ -19,17 +19,16 @@ import {
    Collapse,
    Divider,
    Checkbox, // Import Checkbox
+   Tooltip, // Import Tooltip
 } from "@mui/material";
 import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon } from "@mui/icons-material";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { Request, Order, HeadCell } from "./types.ts";
-import ActionMenu from "../../../../../components/ActionMenu.tsx";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { toast } from "../../../../../utils/toast.ts";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import PrintOutlinedIcon from "@mui/icons-material/PrintOutlined";
 
 const ResponsiveTable = ({
    headCells,
@@ -241,35 +240,50 @@ const ResponsiveTable = ({
                         </Typography>
                      </Box>
                      <Box sx={{ mt: 1 }}>
-                        <ActionMenu
-                           icon={<MoreVertIcon fontSize="small" />}
-                           actions={[
-                              {
-                                 label: t("list.actions.view") || "View",
-                                 icon: <VisibilityOutlinedIcon fontSize="small" />,
-                                 onClick: () => {
-                                    toast.info(`Viewing request ${request.id}`);
-                                    console.log(`View details for ${request.id}`);
-                                 },
-                              },
-                              {
-                                 label: t("list.actions.edit") || "Edit",
-                                 icon: <EditOutlinedIcon fontSize="small" />,
-                                 onClick: () => {
-                                    toast.info(`Editing request ${request.id}`);
-                                    console.log(`Edit details for ${request.id}`);
-                                 },
-                              },
-                              {
-                                 label: t("list.actions.delete") || "Delete",
-                                 icon: <DeleteOutlineOutlinedIcon fontSize="small" color="error" />,
-                                 onClick: () => {
-                                    toast.error(`Deleting request ${request.id}`);
-                                    console.log(`Delete request ${request.id}`);
-                                 },
-                              },
-                           ]}
-                        />
+                        <Box sx={{ display: "flex", gap: 1, justifyContent: "center" }}>
+                           <Tooltip title={t("list.actions.view") || "View"}>
+                              <IconButton
+                                 color="primary"
+                                 size="small"
+                                 onClick={() => console.log(`View details for ${request.id}`)}
+                                 sx={{
+                                    bgcolor: theme.palette.primary.main + "10",
+                                    "&:hover": { bgcolor: theme.palette.primary.main + "20" },
+                                    borderRadius: 2,
+                                 }}
+                              >
+                                 <VisibilityOutlinedIcon fontSize="small" />
+                              </IconButton>
+                           </Tooltip>
+                           <Tooltip title={t("list.actions.print") || "Print"}>
+                              <IconButton
+                                 color="info"
+                                 size="small"
+                                 onClick={() => console.log(`Print request ${request.id}`)}
+                                 sx={{
+                                    bgcolor: theme.palette.info.main + "10",
+                                    "&:hover": { bgcolor: theme.palette.info.main + "20" },
+                                    borderRadius: 2,
+                                 }}
+                              >
+                                 <PrintOutlinedIcon fontSize="small" />
+                              </IconButton>
+                           </Tooltip>
+                           <Tooltip title={t("list.actions.cancel") || "Cancel"}>
+                              <IconButton
+                                 color="error"
+                                 size="small"
+                                 onClick={() => console.log(`Cancel request ${request.id}`)}
+                                 sx={{
+                                    bgcolor: theme.palette.error.main + "10",
+                                    "&:hover": { bgcolor: theme.palette.error.main + "20" },
+                                    borderRadius: 2,
+                                 }}
+                              >
+                                 <DeleteOutlineOutlinedIcon fontSize="small" color="error" />
+                              </IconButton>
+                           </Tooltip>
+                        </Box>
                      </Box>
                   </Box>
                </Collapse>
@@ -385,32 +399,77 @@ const ResponsiveTable = ({
                      />
                   </Box>
                   <Box>
-                     <ActionMenu
-                        icon={<MoreVertIcon fontSize="small" />}
-                        actions={[
-                           {
-                              label: t("list.actions.view") || "View",
-                              onClick: () => {
+                     <Box sx={{ display: "flex", gap: 0.5, justifyContent: "center" }}>
+                        <Tooltip title={t("list.actions.view") || "View"}>
+                           <IconButton
+                              color="primary"
+                              size="small"
+                              onClick={(event) => {
+                                 event.stopPropagation();
                                  toast.info(`Viewing request ${request.id}`);
                                  console.log(`View details for ${request.id}`);
-                              },
-                           },
-                           {
-                              label: t("list.actions.edit") || "Edit",
-                              onClick: () => {
-                                 toast.info(`Editing request ${request.id}`);
-                                 console.log(`Edit details for ${request.id}`);
-                              },
-                           },
-                           {
-                              label: t("list.actions.delete") || "Delete",
-                              onClick: () => {
-                                 toast.error(`Deleting request ${request.id}`);
-                                 console.log(`Delete request ${request.id}`);
-                              },
-                           },
-                        ]}
-                     />
+                              }}
+                              aria-label="view details"
+                              sx={{
+                                 bgcolor: theme.palette.primary.main + "10",
+                                 "&:hover": {
+                                    bgcolor: theme.palette.primary.main + "20",
+                                    transform: "scale(1.1)",
+                                 },
+                                 transition: "all 0.2s ease-in-out",
+                                 borderRadius: 2,
+                              }}
+                           >
+                              <VisibilityOutlinedIcon fontSize="small" />
+                           </IconButton>
+                        </Tooltip>
+                        <Tooltip title={t("list.actions.print") || "Print"}>
+                           <IconButton
+                              color="info"
+                              size="small"
+                              onClick={(event) => {
+                                 event.stopPropagation();
+                                 toast.info(`Printing request ${request.id}`);
+                                 console.log(`Print request ${request.id}`);
+                              }}
+                              aria-label="print request"
+                              sx={{
+                                 bgcolor: theme.palette.info.main + "10",
+                                 "&:hover": {
+                                    bgcolor: theme.palette.info.main + "20",
+                                    transform: "scale(1.1)",
+                                 },
+                                 transition: "all 0.2s ease-in-out",
+                                 borderRadius: 2,
+                              }}
+                           >
+                              <PrintOutlinedIcon fontSize="small" />
+                           </IconButton>
+                        </Tooltip>
+                        <Tooltip title={t("list.actions.cancel") || "Cancel"}>
+                           <IconButton
+                              color="error"
+                              size="small"
+                              onClick={(event) => {
+                                 event.stopPropagation();
+                                 toast.error(`Cancelling request ${request.id}`);
+                                 console.log(`Cancel request ${request.id}`);
+                              }}
+                              aria-label="cancel request"
+                              sx={{
+                                 bgcolor: theme.palette.error.main + "10",
+                                 "&:hover": {
+                                    bgcolor: theme.palette.error.main + "20",
+                                    transform: "scale(1.1)",
+                                 },
+                                 transition: "all 0.2s ease-in-out",
+                                 borderRadius: 2,
+                              }}
+                           >
+                              <DeleteOutlineOutlinedIcon fontSize="small" />
+                           </IconButton>
+                        </Tooltip>
+                     </Box>
                   </Box>
                </Box>
             </CardContent>
@@ -608,37 +667,77 @@ const ResponsiveTable = ({
                                  px: isSmallTablet ? 1 : 2,
                               }}
                            >
-                              <ActionMenu
-                                 icon={
-                                    <MoreVertIcon fontSize={isSmallTablet ? "small" : "medium"} />
-                                 }
-                                 actions={[
-                                    {
-                                       label: t("list.actions.view") || "View",
-                                       onClick: (event: React.MouseEvent<unknown>) => {
+                              <Box sx={{ display: "flex", gap: 0.5, justifyContent: "center" }}>
+                                 <Tooltip title={t("list.actions.view") || "View"}>
+                                    <IconButton
+                                       color="primary"
+                                       size="small"
+                                       onClick={(event) => {
                                           event.stopPropagation();
                                           toast.info(`Viewing request ${request.id}`);
                                           console.log(`View details for ${request.id}`);
-                                       },
-                                    },
-                                    {
-                                       label: t("list.actions.edit") || "Edit",
-                                       onClick: (event: React.MouseEvent<unknown>) => {
+                                       }}
+                                       aria-label="view details"
+                                       sx={{
+                                          bgcolor: theme.palette.primary.main + "10",
+                                          "&:hover": {
+                                             bgcolor: theme.palette.primary.main + "20",
+                                             transform: "scale(1.1)",
+                                          },
+                                          transition: "all 0.2s ease-in-out",
+                                          borderRadius: 2,
+                                       }}
+                                    >
+                                       <VisibilityOutlinedIcon fontSize="small" />
+                                    </IconButton>
+                                 </Tooltip>
+                                 <Tooltip title={t("list.actions.print") || "Print"}>
+                                    <IconButton
+                                       color="info"
+                                       size="small"
+                                       onClick={(event) => {
                                           event.stopPropagation();
-                                          toast.info(`Editing request ${request.id}`);
-                                          console.log(`Edit details for ${request.id}`);
-                                       },
-                                    },
-                                    {
-                                       label: t("list.actions.delete") || "Delete",
-                                       onClick: (event: React.MouseEvent<unknown>) => {
+                                          toast.info(`Printing request ${request.id}`);
+                                          console.log(`Print request ${request.id}`);
+                                       }}
+                                       aria-label="print request"
+                                       sx={{
+                                          bgcolor: theme.palette.info.main + "10",
+                                          "&:hover": {
+                                             bgcolor: theme.palette.info.main + "20",
+                                             transform: "scale(1.1)",
+                                          },
+                                          transition: "all 0.2s ease-in-out",
+                                          borderRadius: 2,
+                                       }}
+                                    >
+                                       <PrintOutlinedIcon fontSize="small" />
+                                    </IconButton>
+                                 </Tooltip>
+                                 <Tooltip title={t("list.actions.cancel") || "Cancel"}>
+                                    <IconButton
+                                       color="error"
+                                       size="small"
+                                       onClick={(event) => {
                                           event.stopPropagation();
-                                          toast.error(`Deleting request ${request.id}`);
-                                          console.log(`Delete request ${request.id}`);
-                                       },
-                                    },
-                                 ]}
-                              />
+                                          toast.error(`Cancelling request ${request.id}`);
+                                          console.log(`Cancel request ${request.id}`);
+                                       }}
+                                       aria-label="cancel request"
+                                       sx={{
+                                          bgcolor: theme.palette.error.main + "10",
+                                          "&:hover": {
+                                             bgcolor: theme.palette.error.main + "20",
+                                             transform: "scale(1.1)",
+                                          },
+                                          transition: "all 0.2s ease-in-out",
+                                          borderRadius: 2,
+                                       }}
+                                    >
+                                       <DeleteOutlineOutlinedIcon fontSize="small" />
+                                    </IconButton>
+                                 </Tooltip>
+                              </Box>
                            </TableCell>
                         </TableRow>
                      );

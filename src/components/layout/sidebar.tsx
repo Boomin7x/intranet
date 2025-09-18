@@ -1,11 +1,10 @@
-/* eslint-disable react-refresh/only-export-components */
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 import { alpha, Box, IconButton, Popover, Tooltip, Typography, useTheme } from "@mui/material";
 import PopupState, { bindPopover, bindTrigger } from "material-ui-popup-state";
 import { useEffect, type FC } from "react";
 import { useMediaQuery } from "react-responsive";
-import { Link, useNavigate, useParams, useSearchParams, type To } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams, type To, useMatch } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import type { MUIIconType } from ".";
 import { sidebarVisibility } from "../../store/atom";
@@ -38,14 +37,7 @@ const Sidebar = () => {
             }}
          >
             {navItems({ lang }).map((items, i) => (
-               <NavItems
-                  key={"navItems" + i}
-                  {...items}
-                  isActive={
-                     typeof items.link === "object" &&
-                     location.pathname.includes(items.link?.pathname ?? "")
-                  }
-               />
+               <SidebarNavItemWrapper key={"navItems" + i} {...items} />
             ))}
          </Box>
       </Box>
@@ -138,6 +130,15 @@ interface NavItemProps {
 export interface INavItems extends NavItemProps {
    navChildren?: NavItemProps[];
 }
+
+const SidebarNavItemWrapper: FC<INavItems> = ({ ...navItemProps }) => {
+   const path =
+      typeof navItemProps.link === "string" ? navItemProps.link : navItemProps.link?.pathname;
+   const match = useMatch(path + "/*");
+   const isActive = !!match;
+
+   return <NavItems {...navItemProps} isActive={isActive} />;
+};
 
 const NavItems: FC<INavItems> = ({
    icons: Icon,

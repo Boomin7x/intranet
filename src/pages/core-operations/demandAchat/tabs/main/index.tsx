@@ -500,7 +500,7 @@ const DemandAchatMainTab: React.FC = () => {
                   </Card>
                </Grid>
             </Slide>
-            <Grid size={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
                <Slide in={animateCards} direction="up" timeout={1200}>
                   <Card
                      elevation={2}
@@ -569,6 +569,8 @@ const DemandAchatMainTab: React.FC = () => {
                                     sx={{
                                        px: 0,
                                        py: 1.5,
+                                       display: "flex",
+                                       gap: 2,
                                        flexDirection: isMobile ? "column" : "row",
                                        alignItems: isMobile ? "flex-start" : "center",
                                        "&:hover": {
@@ -625,11 +627,13 @@ const DemandAchatMainTab: React.FC = () => {
 
                                     <Box
                                        sx={{
+                                          flex: 1,
                                           display: "flex",
                                           alignItems: "center",
                                           gap: 1,
                                           flexWrap: "wrap",
                                           ml: isMobile ? "50px" : "0", // Align content with icon on mobile
+                                          justifyContent: isMobile ? "flex-start" : "flex-end",
                                        }}
                                     >
                                        <Chip
@@ -640,6 +644,7 @@ const DemandAchatMainTab: React.FC = () => {
                                              color: (
                                                 getActionColor(activity.action) as PaletteColor
                                              ).main,
+
                                              fontWeight: 600,
                                              textTransform: "capitalize",
                                              "&:hover": {
@@ -650,6 +655,7 @@ const DemandAchatMainTab: React.FC = () => {
                                        <Typography
                                           variant="caption"
                                           sx={{
+                                             ml: isMobile ? 0 : "auto",
                                              color: theme.palette.grey[500],
                                              fontFamily: "Outfit, sans-serif",
                                           }}
